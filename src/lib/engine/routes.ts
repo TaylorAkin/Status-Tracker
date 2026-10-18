@@ -65,14 +65,18 @@ export function mapPoint(lat: number, lon: number): [number, number] {
 /** 65 projected points along the great circle between two [lat, lon] positions. */
 export function flightArc(from: [number, number], to: [number, number]): [number, number][] {
   const r = Math.PI / 180;
-  const vec = (p: [number, number]) => [
-    Math.cos(p[0] * r) * Math.cos(p[1] * r),
-    Math.cos(p[0] * r) * Math.sin(p[1] * r),
-    Math.sin(p[0] * r),
-  ];
+  const vec = (p: [number, number]) => [Math.cos(p[0] * r) * Math.cos(p[1] * r), Math.cos(p[0] * r) * Math.sin(p[1] * r), Math.sin(p[0] * r)];
   const a = vec(from);
   const b = vec(to);
-  const angle = Math.acos(Math.max(-1, Math.min(1, a.reduce((v, x, i) => v + x * b[i], 0))));
+  const angle = Math.acos(
+    Math.max(
+      -1,
+      Math.min(
+        1,
+        a.reduce((v, x, i) => v + x * b[i], 0),
+      ),
+    ),
+  );
   const sin = Math.sin(angle);
   const points: [number, number][] = [];
   for (let i = 0; i <= 64; i++) {

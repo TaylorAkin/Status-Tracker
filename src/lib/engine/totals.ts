@@ -8,9 +8,7 @@ const sumCredit = (rows: Entry[]) => rows.reduce((sum, e) => sum + credit(e), 0)
 
 /** Totals for one program, optionally limited to a category. Cancelled entries never count. */
 export function totals(entries: Entry[], program: ProgramCode, category?: Category): Totals {
-  const rows = entries.filter(
-    (e) => e.program === program && (!category || e.category === category) && e.state !== 'Cancelled',
-  );
+  const rows = entries.filter((e) => e.program === program && (!category || e.category === category) && e.state !== 'Cancelled');
   const posted = sumCredit(rows.filter((e) => e.state === 'Posted'));
   const pending = sumCredit(rows.filter((e) => e.state === 'Pending'));
   const planned = sumCredit(rows.filter((e) => e.state === 'Planned' || e.state === 'Potential'));
@@ -39,13 +37,7 @@ export interface GoalSummary {
   forecastPercent: number;
 }
 
-export function goalSummary(
-  entries: Entry[],
-  program: ProgramCode,
-  target: number,
-  asOf: string,
-  statusYear: number,
-): GoalSummary {
+export function goalSummary(entries: Entry[], program: ProgramCode, target: number, asOf: string, statusYear: number): GoalSummary {
   const t = totals(entries, program);
   const months = monthsLeft(asOf, statusYear);
   const actualGap = Math.max(0, target - t.posted);

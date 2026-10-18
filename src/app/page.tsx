@@ -6,8 +6,7 @@ export default function Home() {
       <p className="text-xs font-bold uppercase tracking-[2px] text-brand">StatusTrack</p>
       <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">Know exactly where your airline status stands.</h1>
       <p className="mt-4 max-w-xl text-lg text-muted">
-        Track posted and projected MQDs from flights, card spend, and headstarts, and see what it takes to reach your next
-        Medallion tier.
+        Track posted and projected MQDs from flights, card spend, and headstarts, and see what it takes to reach your next Medallion tier.
       </p>
       <div className="mt-8 flex gap-3">
         <Link href="/sign-up" className="rounded-lg bg-foreground px-5 py-3 font-medium text-white hover:bg-foreground/90">

@@ -17,10 +17,30 @@ const flight = (program: Entry['program'], date: string, route: string, amount: 
   entry({ program, category: 'Flights', date, route, amount, rate: 1, state, description, method: program === 'AS' ? 'distance' : 'fare' });
 
 const headstart = (method: string, description: string) =>
-  entry({ program: 'DL', category: 'Qualifying bonuses', date: '2027-02-01', state: 'Posted', method, description, amount: 2500, rate: 1, override: 2500 });
+  entry({
+    program: 'DL',
+    category: 'Qualifying bonuses',
+    date: '2027-02-01',
+    state: 'Posted',
+    method,
+    description,
+    amount: 2500,
+    rate: 1,
+    override: 2500,
+  });
 
 const spend = (program: Entry['program'], cardKey: string, method: string, month: string, amount: number, divisor: number, state: Entry['state']) =>
-  entry({ program, category: 'Credit card spend', date: `2027-${month}`, cardKey, method, amount, rate: 1 / divisor, state, description: `${cardKey} ${month} spend` });
+  entry({
+    program,
+    category: 'Credit card spend',
+    date: `2027-${month}`,
+    cardKey,
+    method,
+    amount,
+    rate: 1 / divisor,
+    state,
+    description: `${cardKey} ${month} spend`,
+  });
 
 export const KGM_ENTRIES: Entry[] = [
   // Delta
@@ -30,8 +50,26 @@ export const KGM_ENTRIES: Entry[] = [
   headstart('headstartR', 'Delta SkyMiles® Reserve American Express Card'),
   headstart('headstartPB', 'Delta SkyMiles® Platinum Business American Express Card'),
   headstart('headstartP', 'Delta SkyMiles® Platinum American Express Card'),
-  entry({ program: 'DL', category: 'Qualifying bonuses', date: '2027-01-26', state: 'Posted', method: 'staysBonus', amount: 299, rate: 1, description: 'Delta Stays bonus MQDs' }),
-  entry({ program: 'DL', category: 'Qualifying bonuses', date: '2027-02-02', state: 'Posted', method: 'rentalBonus', amount: 187, rate: 1, description: 'Rental car bonus MQDs' }),
+  entry({
+    program: 'DL',
+    category: 'Qualifying bonuses',
+    date: '2027-01-26',
+    state: 'Posted',
+    method: 'staysBonus',
+    amount: 299,
+    rate: 1,
+    description: 'Delta Stays bonus MQDs',
+  }),
+  entry({
+    program: 'DL',
+    category: 'Qualifying bonuses',
+    date: '2027-02-02',
+    state: 'Posted',
+    method: 'rentalBonus',
+    amount: 187,
+    rate: 1,
+    description: 'Rental car bonus MQDs',
+  }),
   spend('DL', 'DL-RB', 'reserveBusiness', '01-31', 1272.12, 10, 'Posted'),
   spend('DL', 'DL-R', 'reserve', '01-31', 2087.4, 10, 'Posted'),
   spend('DL', 'DL-PB', 'platinumBusiness', '01-31', 299.99, 20, 'Posted'),
@@ -48,9 +86,29 @@ export const KGM_ENTRIES: Entry[] = [
   flight('AS', '2027-04-18', 'LAS-SAN-PHX', 563, 'Potential', 'John Mayer Sphere Concert'),
   flight('AS', '2027-05-11', 'SEA-HNL', 2677, 'Planned', 'Potential Hawaii Trip'),
   ...[1, 2].map((i) =>
-    entry({ program: 'AS', category: 'Qualifying bonuses', date: '2027-01-01', state: 'Planned', method: 'rollover', amount: 10000, rate: 1, override: 10000, description: `2026 95K milestone rollover · selection ${i}` }),
+    entry({
+      program: 'AS',
+      category: 'Qualifying bonuses',
+      date: '2027-01-01',
+      state: 'Planned',
+      method: 'rollover',
+      amount: 10000,
+      rate: 1,
+      override: 10000,
+      description: `2026 95K milestone rollover · selection ${i}`,
+    }),
   ),
-  entry({ program: 'AS', category: 'Qualifying bonuses', date: '2027-08-20', state: 'Posted', method: 'summitBonus', amount: 10000, rate: 1, override: 10000, description: 'Atmos™ Rewards Summit Visa Infinite® Card' }),
+  entry({
+    program: 'AS',
+    category: 'Qualifying bonuses',
+    date: '2027-08-20',
+    state: 'Posted',
+    method: 'summitBonus',
+    amount: 10000,
+    rate: 1,
+    override: 10000,
+    description: 'Atmos™ Rewards Summit Visa Infinite® Card',
+  }),
   spend('AS', 'AS-S', 'summit', '01-31', 5822.9, 2, 'Posted'),
   spend('AS', 'AS-S', 'summit', '02-28', 2088.21, 2, 'Posted'),
   ...['03-31', '04-30', '05-31', '06-30', '07-31', '08-31', '09-30', '10-31', '11-30', '12-31'].map((m) =>

@@ -1,32 +1,39 @@
 import { Suspense } from 'react';
-import { SignOutButton } from '@/components/sign-out-button';
 import { requireUser } from '@/lib/dal';
+import { getDashboardData } from '@/lib/tracker/data';
+import { Dashboard } from './_components/dashboard';
+import { TrackerProvider } from './_components/tracker-context';
 
 export const metadata = { title: 'Dashboard · StatusTrack' };
 
 export default function DashboardPage() {
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-9 sm:px-7">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[2px] text-brand">2027 Status Year</p>
-          <Suspense fallback={<div className="mt-2 h-14 w-64 animate-pulse rounded-lg bg-line" />}>
-            <Greeting />
-          </Suspense>
-        </div>
-        <SignOutButton />
-      </header>
-      <p className="mt-8 rounded-xl border border-line bg-surface p-6 text-muted">Your Delta tracker will appear here.</p>
+    <main className="mx-auto w-full max-w-[1200px] px-4 py-9 sm:px-7">
+      <Suspense fallback={<DashboardSkeleton />}>
+        <DashboardContent />
+      </Suspense>
     </main>
   );
 }
 
-async function Greeting() {
+async function DashboardContent() {
   const user = await requireUser();
+  const data = await getDashboardData(user.id);
   return (
-    <>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight">Welcome, {user.name}</h1>
-      <p className="text-muted">Signed in as {user.email}</p>
-    </>
+    <TrackerProvider initial={data}>
+      <Dashboard userEmail={user.email} />
+    </TrackerProvider>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="animate-pulse" aria-label="Loading your tracker">
+      <div className="mb-8 h-24 w-80 rounded-lg bg-line" />
+      <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
+        <div className="h-[640px] rounded-2xl bg-line" />
+        <div className="h-[640px] rounded-2xl bg-line" />
+      </div>
+    </div>
   );
 }

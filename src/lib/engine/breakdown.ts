@@ -5,8 +5,7 @@ export type BreakdownLabel = Category | 'Hotels & Rental Car';
 
 export const TRAVEL_BONUS_METHODS = ['staysBonus', 'rentalBonus'];
 
-const isTravelBonus = (e: Entry) =>
-  e.program === 'DL' && e.category === 'Qualifying bonuses' && TRAVEL_BONUS_METHODS.includes(e.method);
+const isTravelBonus = (e: Entry) => e.program === 'DL' && e.category === 'Qualifying bonuses' && TRAVEL_BONUS_METHODS.includes(e.method);
 
 /** "Where earnings come from": Delta hotel/rental bonuses are split out of Qualifying bonuses. */
 export function breakdownTotals(entries: Entry[], program: ProgramCode, label: BreakdownLabel) {
@@ -14,9 +13,7 @@ export function breakdownTotals(entries: Entry[], program: ProgramCode, label: B
     (e) =>
       e.program === program &&
       e.state !== 'Cancelled' &&
-      (label === 'Hotels & Rental Car'
-        ? isTravelBonus(e)
-        : e.category === label && (label !== 'Qualifying bonuses' || !isTravelBonus(e))),
+      (label === 'Hotels & Rental Car' ? isTravelBonus(e) : e.category === label && (label !== 'Qualifying bonuses' || !isTravelBonus(e))),
   );
   return {
     posted: rows.filter((e) => e.state === 'Posted').reduce((sum, e) => sum + credit(e), 0),

@@ -1,16 +1,4 @@
-import {
-  boolean,
-  date,
-  doublePrecision,
-  index,
-  integer,
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  unique,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { boolean, date, doublePrecision, index, integer, pgTable, primaryKey, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { CATEGORIES, ENTRY_STATES } from '../engine/types';
 import { user } from './auth-schema';
 
