@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { neon } from '@neondatabase/serverless';
 
 config({ path: '.env.local' });
-const url = process.env.DATABASE_URL;
+const url = process.env.DATABASE_URL || process.env.STATUS_TRACKER_DATABASE_URL;
 if (!url) throw new Error('DATABASE_URL is empty in .env.local');
 
 const sql = neon(url);
