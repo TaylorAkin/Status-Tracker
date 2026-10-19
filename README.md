@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Status-Tracker
 
-## Getting Started
+Taylor and Karl's status tracker website: plan and track Delta SkyMiles Medallion Qualifying Dollars (MQDs) from flights, card spend, Headstarts, and bonuses.
 
-First, run the development server:
+## Stack
+
+Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind CSS 4 · Neon Postgres + Drizzle ORM · Better Auth · Vitest
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local   # then fill in the values
+pnpm db:migrate              # create tables
+pnpm db:seed                 # load Delta tiers and cards
+pnpm dev                     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Start the dev server |
+| `pnpm test` | Run calculation engine tests |
+| `pnpm typecheck` / `pnpm lint` | Type and lint checks |
+| `pnpm db:generate` | Generate a migration after changing `src/lib/db/schema.ts` |
+| `pnpm db:migrate` | Apply migrations to `DATABASE_URL` |
+| `pnpm db:seed` | Upsert reference data (programs, tiers, cards) |
+| `pnpm db:studio` | Browse the database |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Layout
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/lib/engine/` — pure calculation engine (totals, tiers, chart, earning mix, routes), tested against the original tracker
+- `src/lib/db/` — Drizzle schema and client
+- `src/lib/tracker/` — server-side data loading, Delta earning methods, validation schemas
+- `src/app/dashboard/` — dashboard UI and server actions
+- `docs/plan.md` — project plan
