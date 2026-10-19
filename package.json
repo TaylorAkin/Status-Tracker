@@ -13,7 +13,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.mts",
     "db:studio": "drizzle-kit studio",
-    "format": "prettier --write src scripts"
+    "format": "prettier --write src scripts",
+    "vercel-build": "drizzle-kit migrate && next build"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
