@@ -4,7 +4,7 @@ import { getDashboardData } from '@/lib/tracker/data';
 import { Dashboard } from './_components/dashboard';
 import { TrackerProvider } from './_components/tracker-context';
 
-export const metadata = { title: 'Dashboard · StatusTrack' };
+export const metadata = { title: 'Dashboard' };
 
 export default function DashboardPage() {
   return (
