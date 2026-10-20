@@ -27,11 +27,17 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
     router.refresh();
   }
 
-  const field = 'w-full rounded-lg border border-line bg-surface px-3 py-2.5 outline-none focus:ring-2 focus:ring-brand/40';
+  const field =
+    'w-full rounded-xl border border-muted/75 bg-surface px-3.5 py-3 text-base outline-none focus:border-sky-deep focus:ring-3 focus:ring-sky-deep/25';
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4 rounded-2xl border border-line bg-surface p-7">
-      <h1 className="text-2xl font-semibold tracking-tight">{isSignUp ? 'Create your account' : 'Sign in'}</h1>
+    <form onSubmit={onSubmit} className="w-full max-w-[400px] space-y-4 rounded-3xl bg-surface p-6 shadow-[0_24px_60px_rgba(10,30,70,.28)] sm:p-9">
+      <div className="pb-1">
+        <h1 className="text-[28px] font-bold leading-tight tracking-[-0.02em] text-navy">{isSignUp ? 'Create your account' : 'Welcome back'}</h1>
+        <p className="mt-1.5 text-[15px] text-muted">
+          {isSignUp ? 'Free to use. No airline login required.' : 'Sign in to see where your status stands.'}
+        </p>
+      </div>
       {isSignUp && (
         <label className="block space-y-1.5 text-sm font-medium">
           <span>Name</span>
@@ -60,13 +66,13 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
       )}
       <button
         disabled={pending}
-        className="w-full rounded-lg bg-foreground px-4 py-2.5 font-medium text-white hover:bg-foreground/90 disabled:opacity-50"
+        className="mt-2 w-full rounded-full bg-navy px-5 py-3.5 text-base font-semibold text-white hover:bg-navy/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:opacity-50"
       >
         {pending ? 'Please wait…' : isSignUp ? 'Create account' : 'Sign in'}
       </button>
       <p className="text-center text-sm text-muted">
         {isSignUp ? 'Already have an account? ' : 'New here? '}
-        <Link href={isSignUp ? '/sign-in' : '/sign-up'} className="font-medium text-brand underline">
+        <Link href={isSignUp ? '/sign-in' : '/sign-up'} className="font-semibold text-sky-ink underline underline-offset-2 hover:text-navy">
           {isSignUp ? 'Sign in' : 'Create an account'}
         </Link>
       </p>

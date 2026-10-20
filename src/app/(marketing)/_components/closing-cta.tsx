@@ -17,7 +17,7 @@ export function ClosingCta() {
           Get started for free
         </Link>
       </div>
-      <div className="mt-10 h-12 bg-linear-to-b from-sky-deep to-sky" />
+      <div className="mt-6 h-48 bg-sky sky-fade" />
       <div className="bg-sky">
         <Image
           src={cloudBand}

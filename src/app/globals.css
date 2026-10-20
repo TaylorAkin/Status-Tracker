@@ -43,6 +43,25 @@
   }
 }
 
+/* --sky-deep fading out along an ease-in-out curve. A linear fade starts and stops abruptly, which the eye sees as a
+   horizontal line at each end; easing both ends hides where the fade begins and ends. */
+@utility sky-fade {
+  background-image: linear-gradient(
+    to bottom,
+    var(--sky-deep) 0%,
+    color-mix(in srgb, var(--sky-deep) 97.2%, transparent) 10%,
+    color-mix(in srgb, var(--sky-deep) 89.6%, transparent) 20%,
+    color-mix(in srgb, var(--sky-deep) 78.4%, transparent) 30%,
+    color-mix(in srgb, var(--sky-deep) 64.8%, transparent) 40%,
+    color-mix(in srgb, var(--sky-deep) 50%, transparent) 50%,
+    color-mix(in srgb, var(--sky-deep) 35.2%, transparent) 60%,
+    color-mix(in srgb, var(--sky-deep) 21.6%, transparent) 70%,
+    color-mix(in srgb, var(--sky-deep) 10.4%, transparent) 80%,
+    color-mix(in srgb, var(--sky-deep) 2.8%, transparent) 90%,
+    transparent 100%
+  );
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

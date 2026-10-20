@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from '../_assets/logo.webp';
+import logo from '@/assets/logo.webp';
 
 /** Icon + wordmark. `light` sits on the sky; `dark` on the page background. */
 export function Logo({ tone }: { tone: 'light' | 'dark' }) {

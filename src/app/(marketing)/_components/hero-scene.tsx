@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, type CSSProperties } from 'react';
 import plane from '../_assets/plane.webp';
-import skyClouds from '../_assets/sky-clouds.webp';
+import skyClouds from '@/assets/sky-clouds.webp';
 
 // The gauge and plane were cut from the 1981 × 794 artwork; these are their positions in its pixels. The foreground box
 // crops the artwork to just the gauge (with a little room for its round caps) so it can be sized on its own.
@@ -45,7 +45,8 @@ export function HeroScene({ progress, className }: { progress: number; className
   return (
     <>
       {/* As in design 1a, the clouds are wider than the viewport and hang slightly below the hero. On tall, narrow screens
-          they also grow with the hero's height so the cloud bank stays deep. */}
+          they also grow with the hero's height so the cloud bank stays deep. The top of the artwork's sky is faded out so it
+          blends into --sky without a visible edge. */}
       <div className="pointer-events-none absolute bottom-[-7vw] left-1/2 z-0 w-[max(142vw,1100px)] -translate-x-1/2 sm:w-[max(142vw,calc(clamp(640px,100svh-5rem,920px)*2.2))]">
         <Image
           src={skyClouds}
@@ -54,7 +55,7 @@ export function HeroScene({ progress, className }: { progress: number; className
           loading="eager"
           fetchPriority="high"
           placeholder="blur"
-          className="block h-auto w-full"
+          className="block h-auto w-full mask-t-from-60%"
         />
       </div>
 
