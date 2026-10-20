@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, type CSSProperties } from 'react';
 import plane from '../_assets/plane.webp';
-import skyClouds from '../_assets/sky-clouds.webp';
+import skyClouds from '@/assets/sky-clouds.webp';
 
 // The gauge and plane were cut from the 1981 × 794 artwork; these are their positions in its pixels. The foreground box
 // crops the artwork to just the gauge (with a little room for its round caps) so it can be sized on its own.

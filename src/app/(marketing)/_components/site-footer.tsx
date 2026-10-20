@@ -1,4 +1,4 @@
-import { Logo } from './logo';
+import { Logo } from '@/components/logo';
 
 export function SiteFooter() {
   return (
