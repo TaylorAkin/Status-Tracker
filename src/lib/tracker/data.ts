@@ -1,7 +1,7 @@
 import 'server-only';
 import { and, asc, eq, sql } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { card, entry, program, tier, tracker, trackerCard } from '@/lib/db/schema';
+import { card, entry, program, tier, tracker, trackerCard, userTour } from '@/lib/db/schema';
 import type { Entry } from '@/lib/engine';
 import type { DashboardData } from './types';
 
@@ -53,7 +53,7 @@ export function toEngineEntry(row: typeof entry.$inferSelect): Entry {
 
 export async function getDashboardData(userId: string): Promise<DashboardData> {
   const t = await getOrCreateTracker(userId);
-  const [[p], tiers, cards, trackerCards, entries] = await Promise.all([
+  const [[p], tiers, cards, trackerCards, entries, tours] = await Promise.all([
     db.select().from(program).where(eq(program.code, PROGRAM_CODE)),
     db
       .select({ name: tier.name, threshold: tier.threshold })
@@ -70,6 +70,7 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
       .from(trackerCard)
       .where(eq(trackerCard.trackerId, t.id)),
     db.select().from(entry).where(eq(entry.trackerId, t.id)).orderBy(asc(entry.date), asc(entry.createdAt)),
+    db.select({ tourKey: userTour.tourKey, status: userTour.status }).from(userTour).where(eq(userTour.userId, userId)),
   ]);
 
   return {
@@ -79,5 +80,6 @@ export async function getDashboardData(userId: string): Promise<DashboardData> {
     cards,
     trackerCards,
     entries: entries.map(toEngineEntry),
+    tours: Object.fromEntries(tours.map((t) => [t.tourKey, t.status])),
   };
 }

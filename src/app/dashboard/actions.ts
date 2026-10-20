@@ -4,16 +4,17 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { refresh } from 'next/cache';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { card, entry, tracker, trackerCard } from '@/lib/db/schema';
+import { card, entry, tracker, trackerCard, userTour } from '@/lib/db/schema';
 import { ENTRY_STATES } from '@/lib/engine';
 import { requireUser } from '@/lib/dal';
 import { getOrCreateTracker } from '@/lib/tracker/data';
 import { HEADSTART_METHOD } from '@/lib/tracker/methods';
 import { cardHoldingsInput, entryInput, monthlySpendInput, settingsInput, type EntryInput } from '@/lib/tracker/schemas';
+import { TOUR_KEYS, TOUR_STATUSES, type TourKey, type TourStatus } from '@/lib/tracker/types';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-/** The signed-in user's tracker. Every action scopes its writes to this tracker id. */
+/** The signed-in user's tracker. Tracker data is scoped to this tracker id; per-user data like tour progress uses requireUser directly. */
 async function currentTracker() {
   const user = await requireUser();
   return getOrCreateTracker(user.id);
@@ -212,5 +213,16 @@ export async function setCardIncluded(cardKey: string, included: boolean) {
     .update(trackerCard)
     .set({ included: z.boolean().parse(included) })
     .where(and(eq(trackerCard.trackerId, t.id), eq(trackerCard.cardKey, z.string().parse(cardKey))));
+  refresh();
+}
+
+/** Saves that the user finished or dismissed a guided tour. Replaying a tour overwrites the row. */
+export async function markTour(key: TourKey, status: TourStatus) {
+  const user = await requireUser();
+  const values = { userId: user.id, tourKey: z.enum(TOUR_KEYS).parse(key), status: z.enum(TOUR_STATUSES).parse(status) };
+  await db
+    .insert(userTour)
+    .values(values)
+    .onConflictDoUpdate({ target: [userTour.userId, userTour.tourKey], set: { status: values.status, updatedAt: new Date() } });
   refresh();
 }

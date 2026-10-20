@@ -4,6 +4,7 @@ import { credit } from '@/lib/engine';
 import { fmt } from '@/lib/format';
 import { RENTAL_METHOD, STAYS_METHOD } from '@/lib/tracker/methods';
 import { buttonClass, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 const TYPES = [
@@ -15,7 +16,15 @@ export function TravelBonusesSection() {
   const { data, unit, setState, openEntry } = useTracker();
   return (
     <Panel>
-      <PanelHead title="Delta Stays & rental car bonus MQDs" sub="Track qualifying promotional MQDs from completed or planned stays and rentals." />
+      <PanelHead
+        title={
+          <>
+            Delta Stays &amp; rental car bonus MQDs
+            <InfoTip id="travel-bonuses" />
+          </>
+        }
+        sub="Track qualifying promotional MQDs from completed or planned stays and rentals."
+      />
       <div className="grid gap-4 md:grid-cols-2">
         {TYPES.map((type) => {
           const rows = data.entries

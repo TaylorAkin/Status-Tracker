@@ -6,6 +6,7 @@ import type { CardHolding } from '@/lib/tracker/types';
 import { ModalDialog } from '@/components/modal-dialog';
 import { buttonClass, Hint, inputClass, labelClass, selectClass } from '@/components/ui';
 import * as actions from '../actions';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 const HOLDING_LABELS: Record<CardHolding, string> = { held: 'I have it', potential: 'Considering', none: "Don't have" };
@@ -92,15 +93,21 @@ function SettingsForm() {
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="s-asof" className={labelClass}>
-            As-of date for remaining monthly pace
-          </label>
+          <div className="mb-1.5 flex h-4 items-center">
+            <label htmlFor="s-asof" className="text-xs font-semibold">
+              As-of date for remaining monthly pace
+            </label>
+            <InfoTip id="settings.asof" />
+          </div>
           <input id="s-asof" type="date" required className={inputClass} value={asOf} onChange={(e) => setAsOf(e.target.value)} />
         </div>
       </div>
 
       <fieldset className="mt-6">
-        <legend className="text-sm font-semibold">Your Delta cards</legend>
+        <legend className="text-sm font-semibold">
+          Your Delta cards
+          <InfoTip id="settings.cards" />
+        </legend>
         <Hint className="mt-1">
           Cards you have add their MQD Headstart and a monthly spend planner. Cards you&apos;re considering stay out of your totals until you include
           them.

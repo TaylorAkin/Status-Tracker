@@ -6,6 +6,8 @@ import { EntryDialog } from './entry-dialog';
 import { FlightMap } from './flight-map';
 import { FlightsSection } from './flights-section';
 import { HeadstartsSection } from './headstarts-section';
+import { HelpMenu } from './help/help-menu';
+import { ReadingBanner } from './help/reading-banner';
 import { Breakdown, EarningMix } from './insights';
 import { Ledger } from './ledger';
 import { MonthlySpendSection } from './monthly-spend-section';
@@ -28,15 +30,18 @@ export function Dashboard({ userEmail }: { userEmail: string }) {
           <p className="text-muted">Delta SkyMiles Medallion Status · {userEmail}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button className={buttonClass.secondary} onClick={() => setSettingsOpen(true)}>
+          <HelpMenu />
+          <button className={buttonClass.secondary} data-help="settings" onClick={() => setSettingsOpen(true)}>
             Settings
           </button>
-          <button className={buttonClass.dark} onClick={() => openEntry()}>
+          <button className={buttonClass.dark} data-help="add-earning" onClick={() => openEntry()}>
             + Add earning
           </button>
           <SignOutButton />
         </div>
       </header>
+
+      <ReadingBanner />
 
       <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
         <SummaryCard />

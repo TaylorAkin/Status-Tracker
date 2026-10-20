@@ -7,6 +7,7 @@ import { deltaMethods } from '@/lib/tracker/methods';
 import { ModalDialog } from '@/components/modal-dialog';
 import { buttonClass, Hint, inputClass, labelClass, selectClass } from '@/components/ui';
 import * as actions from '../actions';
+import { InfoTip } from './help/info-tip';
 import { useAirports } from './use-airports';
 import { useTracker } from './tracker-context';
 
@@ -131,7 +132,7 @@ function EntryForm() {
     <form onSubmit={submit}>
       <h2 className="text-xl font-semibold">{editing ? 'Edit earning' : (entryDialog.preset?.title ?? 'Add earning')}</h2>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <div>
+        <div data-help="entry.category">
           <label htmlFor="f-category" className={labelClass}>
             Category
           </label>
@@ -169,7 +170,7 @@ function EntryForm() {
             onChange={(e) => set({ date: e.target.value })}
           />
         </div>
-        <div>
+        <div data-help="entry.state">
           <label htmlFor="f-state" className={labelClass}>
             Earning state
           </label>
@@ -183,10 +184,13 @@ function EntryForm() {
             ))}
           </select>
         </div>
-        <div>
-          <label htmlFor="f-method" className={labelClass}>
-            Calculation method
-          </label>
+        <div data-help="entry.method">
+          <div className="mb-1.5 flex h-4 items-center">
+            <label htmlFor="f-method" className="text-xs font-semibold">
+              Calculation method
+            </label>
+            <InfoTip id="entry.method" />
+          </div>
           <select id="f-method" className={selectClass} value={method.key} onChange={(e) => set({ method: e.target.value })}>
             {methods.map((m) => (
               <option key={m.key} value={m.key}>
@@ -211,7 +215,7 @@ function EntryForm() {
           />
         </div>
         {isFlight && (
-          <div className="sm:col-span-2">
+          <div data-help="entry.route" className="sm:col-span-2">
             <label htmlFor="f-route" className={labelClass}>
               Airport route · IATA codes
             </label>
@@ -232,10 +236,13 @@ function EntryForm() {
             <Hint className={routeError ? 'text-accent' : ''}>{routeError || routeInfo}</Hint>
           </div>
         )}
-        <div>
-          <label htmlFor="f-amount" className={labelClass}>
-            {method.amountLabel}
-          </label>
+        <div data-help="entry.amount">
+          <div className="mb-1.5 flex h-4 items-center">
+            <label htmlFor="f-amount" className="text-xs font-semibold">
+              {method.amountLabel}
+            </label>
+            <InfoTip id="entry.amount" />
+          </div>
           <input
             id="f-amount"
             type="number"
@@ -263,9 +270,12 @@ function EntryForm() {
           </div>
         )}
         <div className="sm:col-span-2">
-          <label htmlFor="f-override" className={labelClass}>
-            Posted / exact {unit} (optional)
-          </label>
+          <div className="mb-1.5 flex h-4 items-center">
+            <label htmlFor="f-override" className="text-xs font-semibold">
+              Posted / exact {unit} (optional)
+            </label>
+            <InfoTip id="entry.override" />
+          </div>
           <input
             id="f-override"
             type="number"

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { requireUser } from '@/lib/dal';
 import { getDashboardData } from '@/lib/tracker/data';
 import { Dashboard } from './_components/dashboard';
+import { TourProvider } from './_components/help/tour';
 import { TrackerProvider } from './_components/tracker-context';
 
 export const metadata = { title: 'Dashboard' };
@@ -21,7 +22,9 @@ async function DashboardContent() {
   const data = await getDashboardData(user.id);
   return (
     <TrackerProvider initial={data}>
-      <Dashboard userEmail={user.email} />
+      <TourProvider>
+        <Dashboard userEmail={user.email} />
+      </TourProvider>
     </TrackerProvider>
   );
 }

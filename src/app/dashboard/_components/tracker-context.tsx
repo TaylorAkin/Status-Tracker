@@ -2,7 +2,7 @@
 
 import { createContext, use, useCallback, useMemo, useOptimistic, useRef, useState, useTransition, type ReactNode } from 'react';
 import type { Entry, EntryState } from '@/lib/engine';
-import type { DashboardData } from '@/lib/tracker/types';
+import type { DashboardData, TourKey, TourStatus } from '@/lib/tracker/types';
 import * as actions from '../actions';
 
 type Op =
@@ -10,7 +10,8 @@ type Op =
   | { type: 'delete'; id: string }
   | { type: 'patch'; id: string; patch: Partial<Entry> }
   | { type: 'settings'; target: number; asOf: string }
-  | { type: 'cardIncluded'; cardKey: string; included: boolean };
+  | { type: 'cardIncluded'; cardKey: string; included: boolean }
+  | { type: 'tour'; key: TourKey; status: TourStatus };
 
 function reducer(state: DashboardData, op: Op): DashboardData {
   switch (op.type) {
@@ -32,6 +33,8 @@ function reducer(state: DashboardData, op: Op): DashboardData {
         ...state,
         trackerCards: state.trackerCards.map((c) => (c.cardKey === op.cardKey ? { ...c, included: op.included } : c)),
       };
+    case 'tour':
+      return { ...state, tours: { ...state.tours, [op.key]: op.status } };
   }
 }
 
@@ -52,6 +55,8 @@ interface TrackerContextValue {
   run: (op: Op | null, action: () => Promise<unknown>, success?: string) => void;
   setState: (id: string, state: EntryState, success?: string) => void;
   setDate: (id: string, date: string) => void;
+  /** Saves a tour's status; the dashboard reflects it immediately. */
+  markTour: (key: TourKey, status: TourStatus) => void;
   toast: (message: string) => void;
   openEntry: (id?: string, preset?: EntryPreset) => void;
   entryDialog: { open: boolean; id?: string; preset?: EntryPreset };
@@ -107,6 +112,7 @@ export function TrackerProvider({ initial, children }: { initial: DashboardData;
       run,
       setState: (id, state, success) => run({ type: 'patch', id, patch: { state } }, () => actions.setEntryState(id, state), success),
       setDate: (id, date) => run({ type: 'patch', id, patch: { date } }, () => actions.setEntryDate(id, date)),
+      markTour: (key, status) => run({ type: 'tour', key, status }, () => actions.markTour(key, status)),
       toast,
       openEntry: (id, preset) => setEntryDialog({ open: true, id, preset }),
       entryDialog,

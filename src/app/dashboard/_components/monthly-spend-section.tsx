@@ -6,6 +6,7 @@ import { MONTH_NAMES, MONTH_SHORT, precise } from '@/lib/format';
 import type { CardInfo, TrackerCardInfo } from '@/lib/tracker/types';
 import { buttonClass, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
 import * as actions from '../actions';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 export function MonthlySpendSection() {
@@ -16,9 +17,14 @@ export function MonthlySpendSection() {
   const forecast = spend.reduce((s, e) => s + credit(e), 0);
 
   return (
-    <Panel>
+    <Panel data-help="monthly-spend">
       <PanelHead
-        title="Monthly credit-card earnings"
+        title={
+          <>
+            Monthly credit-card earnings
+            <InfoTip id="monthly-spend" />
+          </>
+        }
         sub="Plan all twelve months for each card. Save edits together and mark each month credited when its MQDs post."
       />
       <p className="mb-5 rounded-lg border border-line px-4 py-3 text-xs text-muted">
@@ -149,7 +155,6 @@ function SpendCard({ card, tc }: { card: CardInfo; tc: TrackerCardInfo }) {
                 placeholder={precise(estimate)}
                 disabled={disabled}
                 onChange={(e) => setDraft({ exact: e.target.value })}
-                title="Exact credit (optional). Blank uses the spend estimate."
                 aria-label={`${card.name} ${MONTH_NAMES[m - 1]} exact ${unit}; estimated ${precise(estimate)}`}
                 className="h-8 min-w-0 rounded-md border border-[#cdd7d4] bg-white/95 px-2 text-xs tabular-nums placeholder:text-muted disabled:bg-[#f6f7f6]"
               />

@@ -2,6 +2,7 @@
 
 import { goalSummary, progressScale, tierMarkState, tierProgress, type Tier } from '@/lib/engine';
 import { fmt, percent } from '@/lib/format';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 const TIER_STYLES: Record<string, string> = {
@@ -24,12 +25,15 @@ export function SummaryCard() {
   const progress = tierProgress(tiers, t.posted, t.forecast);
 
   return (
-    <article className="relative flex flex-col overflow-hidden rounded-2xl border border-[#e6c4cb] bg-surface">
+    <article data-help="summary" className="relative flex flex-col overflow-hidden rounded-2xl border border-[#e6c4cb] bg-surface">
       <div className="h-[5px] bg-accent" />
       <div className="relative bg-[linear-gradient(120deg,#002750,#003366_55%,#1b4f86)] px-6 py-5 text-white">
         <p className="text-[11px] font-bold uppercase tracking-[2px] text-white/70">Delta SkyMiles · {tracker.statusYear}</p>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-2xl font-semibold tracking-tight">Medallion Status</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Medallion Status
+            <InfoTip id="summary.goal" />
+          </h2>
           <span className="rounded-full border border-white/50 bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
             {goal ? `${goal.name} Medallion goal` : `Goal ${fmt(tracker.target)} ${unit}`}
           </span>
@@ -42,6 +46,7 @@ export function SummaryCard() {
         </p>
         <p className="text-xs text-muted">
           Posted {unit} · {percent(s.postedPercent)} of goal
+          <InfoTip id="summary.posted" />
         </p>
 
         <StatusBar tiers={tiers} posted={t.posted} forecast={t.forecast} target={tracker.target} goalName={goal?.name} />
@@ -50,6 +55,7 @@ export function SummaryCard() {
           <span>Actual {fmt(t.posted)}</span>
           <span>
             Total forecast {fmt(t.forecast)} ({percent(s.forecastPercent)})
+            <InfoTip id="summary.forecast" />
           </span>
         </div>
 
@@ -67,7 +73,7 @@ export function SummaryCard() {
           ))}
         </div>
 
-        <div className="mt-5 rounded-lg border-l-[3px] border-accent bg-[#f9eef1] p-3 text-[13px]">
+        <div data-help="summary.gap" className="mt-5 rounded-lg border-l-[3px] border-accent bg-[#f9eef1] p-3 text-[13px]">
           <div className="grid grid-cols-2 gap-3">
             {(
               [
@@ -77,6 +83,7 @@ export function SummaryCard() {
             ).map(([label, value, hint]) => (
               <div key={label}>
                 <small className="text-xs text-muted">{label}</small>
+                {label === 'Forecast gap' && <InfoTip id="summary.gap" />}
                 <strong className="my-0.5 block text-[22px] text-accent">{value === 0 ? '✓ 0' : fmt(value)}</strong>
                 <small className="block text-[11px] leading-snug text-muted">{value === 0 ? 'Goal covered' : hint}</small>
               </div>
@@ -88,6 +95,7 @@ export function SummaryCard() {
               : s.actualGap === 0
                 ? 'Posted MQDs already reach your goal.'
                 : `${fmt(s.monthlyPace)} ${unit} / month needed from posted, across ${s.monthsLeft} remaining months.`}
+            <InfoTip id="summary.pace" />
           </p>
         </div>
 
@@ -95,6 +103,7 @@ export function SummaryCard() {
           <div className="mb-3.5 flex justify-between gap-3 text-xs">
             <div>
               Earned from posted credit
+              <InfoTip id="summary.tiers" />
               <strong className="mt-0.5 block text-[15px] text-brand">{progress.actual?.name ?? 'No tier reached yet'}</strong>
             </div>
             <div className="text-right text-muted">
@@ -102,7 +111,7 @@ export function SummaryCard() {
               <strong className="mt-0.5 block text-[15px] text-brand">{progress.forecast?.name ?? 'No tier projected yet'}</strong>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div data-help="summary.tiers" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {tiers.map((tier) => {
               const state = tierMarkState(tier, t.posted, t.forecast);
               return (
@@ -166,7 +175,7 @@ function StatusBar({
   const pct = (v: number) => `${Math.min(100, (v / scale) * 100)}%`;
   return (
     <>
-      <div className="relative mb-3 mt-5 pb-11" aria-label="Progress across status tiers">
+      <div data-help="summary.bar" className="relative mb-3 mt-5 pb-11" aria-label="Progress across status tiers">
         <div className="relative h-3 overflow-hidden rounded-full bg-[#e9eeec]">
           <span className="absolute inset-y-0 left-0 rounded-full bg-brand opacity-30" style={{ width: pct(forecast) }} />
           <span className="absolute inset-y-0 left-0 rounded-full bg-brand" style={{ width: pct(posted) }} />

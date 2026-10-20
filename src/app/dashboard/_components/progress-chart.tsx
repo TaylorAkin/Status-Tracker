@@ -3,6 +3,7 @@
 import { chartScalePercent, chartSeries } from '@/lib/engine';
 import { fmt, MONTH_SHORT } from '@/lib/format';
 import { Panel, PanelHead } from '@/components/ui';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 const ACTUAL = '#003366';
@@ -24,8 +25,16 @@ export function ProgressChart() {
   const last = series[12];
 
   return (
-    <Panel className="flex flex-col">
-      <PanelHead title={`${data.tracker.statusYear} projected totals`} sub="Cumulative progress as a percentage of goal" />
+    <Panel data-help="chart" className="flex flex-col">
+      <PanelHead
+        title={
+          <>
+            {data.tracker.statusYear} projected totals
+            <InfoTip id="chart.lines" />
+          </>
+        }
+        sub="Cumulative progress as a percentage of goal"
+      />
       <div className="flex flex-1 flex-col justify-center">
         <svg
           viewBox="0 0 640 430"
