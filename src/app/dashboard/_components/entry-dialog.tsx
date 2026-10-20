@@ -40,6 +40,8 @@ function blankForm(year: number, category: Category = 'Flights', method?: string
   };
 }
 
+const EDITABLE_STATES: EntryState[] = ['Planned', 'Pending', 'Posted'];
+
 const fromEntry = (e: Entry): Form => ({
   category: e.category,
   date: e.date,
@@ -172,13 +174,13 @@ function EntryForm() {
             Earning state
           </label>
           <select id="f-state" className={selectClass} value={form.state} onChange={(e) => set({ state: e.target.value as EntryState })}>
-            {(['Planned', 'Potential', 'Pending', 'Posted', 'Cancelled'] as const)
-              .filter((s) => s !== 'Potential' || isFlight)
-              .map((s) => (
-                <option key={s} value={s}>
-                  {stateLabel(s)}
-                </option>
-              ))}
+            {/* Potential is set with a flight's Booked switch and Cancelled is replaced by Delete;
+                a legacy entry in either state still shows it so the select stays accurate. */}
+            {[...EDITABLE_STATES, ...(EDITABLE_STATES.includes(form.state) ? [] : [form.state])].map((s) => (
+              <option key={s} value={s}>
+                {stateLabel(s)}
+              </option>
+            ))}
           </select>
         </div>
         <div>

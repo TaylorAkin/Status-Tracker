@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { credit, ENTRY_STATES, type EntryState } from '@/lib/engine';
+import { credit, type EntryState } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
 import { buttonClass, inlineSelectClass, Panel, PanelHead, StatePill } from '@/components/ui';
 import * as actions from '../actions';
@@ -23,7 +23,7 @@ export function Ledger() {
           className={inlineSelectClass}
         >
           <option value="">All states</option>
-          {ENTRY_STATES.map((s) => (
+          {(['Planned', 'Potential', 'Pending', 'Posted'] as const).map((s) => (
             <option key={s} value={s}>
               {stateLabel(s)}
             </option>
