@@ -25,7 +25,7 @@ export function Hero() {
         </p>
       </div>
 
-      <div className="relative z-10 order-3 h-24 bg-linear-to-b from-sky-deep to-transparent sm:h-28" aria-hidden="true" />
+      <div className="relative z-10 order-3 h-24 sky-fade sm:h-28" aria-hidden="true" />
 
       <div className="relative z-30 order-2 flex flex-wrap justify-center gap-3 bg-sky-deep px-4 pt-7 max-sm:shadow-[0_1px_0_var(--sky-deep)] sm:order-5 sm:bg-transparent sm:pt-0">
         <Link href="/sign-up" className={`${PILL} bg-navy text-white focus-visible:outline-white sm:focus-visible:outline-navy`}>

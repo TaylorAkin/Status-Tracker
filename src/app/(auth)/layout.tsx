@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: LayoutProps<'/'>) {
         <div className="mx-auto w-full max-w-[1120px] px-4 py-5 sm:px-6">
           <Logo tone="light" />
         </div>
-        <div className="absolute inset-x-0 top-full h-28 bg-linear-to-b from-sky-deep to-transparent" aria-hidden="true" />
+        <div className="absolute inset-x-0 top-full h-40 sky-fade" aria-hidden="true" />
       </header>
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 pb-24 pt-10 sm:pb-32">
         <Suspense>
