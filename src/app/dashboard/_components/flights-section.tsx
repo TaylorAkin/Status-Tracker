@@ -12,7 +12,6 @@ const VIEWS = {
   potential: { label: 'Potential flights', test: (e: Entry) => e.state === 'Potential' },
   awaiting: { label: 'Awaiting credit', test: (e: Entry) => ['Potential', 'Planned', 'Pending'].includes(e.state) },
   posted: { label: 'Credited to account', test: (e: Entry) => e.state === 'Posted' },
-  cancelled: { label: 'Cancelled flights', test: (e: Entry) => e.state === 'Cancelled' },
 } as const;
 
 export function FlightsSection() {

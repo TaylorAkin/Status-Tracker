@@ -55,9 +55,10 @@ export function SummaryCard() {
 
         <div className="mt-6 grid grid-cols-3 gap-3">
           {[
+            // Same order as an entry's lifecycle: Projected → Pending → Posted.
+            ['Projected', t.planned],
             ['Pending', t.pending],
-            ['Planned', t.planned],
-            ['Actual gap', s.actualGap],
+            ['Posted', t.posted],
           ].map(([label, value]) => (
             <div key={label}>
               <small className="text-xs text-muted">{label}</small>
@@ -67,13 +68,27 @@ export function SummaryCard() {
         </div>
 
         <div className="mt-5 rounded-lg border-l-[3px] border-accent bg-[#f9eef1] p-3 text-[13px]">
-          {s.forecastGap === 0 ? 'Forecast reaches your goal.' : `${fmt(s.forecastGap)} ${unit} still needed beyond your forecast.`}
-          <br />
-          <span className="text-muted">
-            {s.monthlyPace !== null
-              ? `${fmt(s.monthlyPace)} / month needed from actual, across ${s.monthsLeft} remaining months.`
-              : 'Earning window complete.'}
-          </span>
+          <div className="grid grid-cols-2 gap-3">
+            {(
+              [
+                ['Forecast gap', s.forecastGap, 'Still needed beyond your full forecast'],
+                ['Actual gap', s.actualGap, 'Still needed beyond posted MQDs'],
+              ] as const
+            ).map(([label, value, hint]) => (
+              <div key={label}>
+                <small className="text-xs text-muted">{label}</small>
+                <strong className="my-0.5 block text-[22px] text-accent">{value === 0 ? '✓ 0' : fmt(value)}</strong>
+                <small className="block text-[11px] leading-snug text-muted">{value === 0 ? 'Goal covered' : hint}</small>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2.5 border-t border-[#e6c4cb] pt-2 text-muted">
+            {s.monthlyPace === null
+              ? 'Earning window complete.'
+              : s.actualGap === 0
+                ? 'Posted MQDs already reach your goal.'
+                : `${fmt(s.monthlyPace)} ${unit} / month needed from posted, across ${s.monthsLeft} remaining months.`}
+          </p>
         </div>
 
         <section className="mt-5 border-t border-[#e6c4cb] pt-4" aria-label="Status tier progress">
