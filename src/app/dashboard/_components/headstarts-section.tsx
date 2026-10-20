@@ -5,6 +5,7 @@ import { fmt } from '@/lib/format';
 import { HEADSTART_METHOD } from '@/lib/tracker/methods';
 import { buttonClass, Hint, inputClass, labelClass, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
 import * as actions from '../actions';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 export function HeadstartsSection() {
@@ -21,9 +22,14 @@ export function HeadstartsSection() {
     }, 0);
 
   return (
-    <Panel>
+    <Panel data-help="headstarts">
       <PanelHead
-        title="Card MQD Headstarts"
+        title={
+          <>
+            Card MQD Headstarts
+            <InfoTip id="headstarts" />
+          </>
+        }
         sub={
           cards.length
             ? `Your cards contribute ${fmt(total)} forecast ${unit}. Mark each as credited only when it posts.`

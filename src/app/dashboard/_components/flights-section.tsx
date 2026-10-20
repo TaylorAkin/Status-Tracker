@@ -5,6 +5,7 @@ import { credit, flightName, totals, type Entry } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
 import { buttonClass, Hint, inlineSelectClass, Panel, PanelHead, Switch } from '@/components/ui';
 import * as actions from '../actions';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 const VIEWS = {
@@ -23,8 +24,16 @@ export function FlightsSection() {
   const awaiting = flights.filter((e) => VIEWS.awaiting.test(e)).length;
 
   return (
-    <Panel>
-      <PanelHead title="Planned flights & account credit" sub="Mark each flight booked when you buy it, and credited when its MQDs hit your account.">
+    <Panel data-help="flights">
+      <PanelHead
+        title={
+          <>
+            Planned flights &amp; account credit
+            <InfoTip id="flights.states" />
+          </>
+        }
+        sub="Mark each flight booked when you buy it, and credited when its MQDs hit your account."
+      >
         <label className="flex items-center gap-2 text-xs font-semibold">
           Show flights
           <select value={view} onChange={(e) => setView(e.target.value as keyof typeof VIEWS)} className={`${inlineSelectClass} font-normal`}>

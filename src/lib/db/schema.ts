@@ -1,5 +1,6 @@
 import { boolean, date, doublePrecision, index, integer, pgTable, primaryKey, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { CATEGORIES, ENTRY_STATES } from '../engine/types';
+import { TOUR_KEYS, TOUR_STATUSES } from '../tracker/types';
 import { user } from './auth-schema';
 
 export * from './auth-schema';
@@ -104,4 +105,18 @@ export const entry = pgTable(
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
   (t) => [index('entry_tracker_date_idx').on(t.trackerId, t.date)],
+);
+
+/** Guided tours a user has finished or dismissed. Per user, not per tracker, so a new status year doesn't replay them. */
+export const userTour = pgTable(
+  'user_tour',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    tourKey: text('tour_key', { enum: TOUR_KEYS }).notNull(),
+    status: text('status', { enum: TOUR_STATUSES }).notNull(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.tourKey] })],
 );

@@ -5,6 +5,7 @@ import { credit, type EntryState } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
 import { buttonClass, inlineSelectClass, Panel, PanelHead, StatePill } from '@/components/ui';
 import * as actions from '../actions';
+import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 export function Ledger() {
@@ -14,8 +15,16 @@ export function Ledger() {
   const inactiveCards = new Set(data.trackerCards.filter((c) => !c.included).map((c) => c.cardKey));
 
   return (
-    <Panel>
-      <PanelHead title="Earning activity" sub="Every flight, monthly card spend, and qualifying bonus in one log.">
+    <Panel data-help="ledger">
+      <PanelHead
+        title={
+          <>
+            Earning activity
+            <InfoTip id="ledger.states" />
+          </>
+        }
+        sub="Every flight, monthly card spend, and qualifying bonus in one log."
+      >
         <select
           value={state}
           onChange={(e) => setState(e.target.value as EntryState | '')}
