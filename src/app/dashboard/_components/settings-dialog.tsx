@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { fmt, shortCardName } from '@/lib/format';
 import type { CardHolding } from '@/lib/tracker/types';
 import { ModalDialog } from '@/components/modal-dialog';
-import { buttonClass, Hint, inputClass, labelClass } from '@/components/ui';
+import { buttonClass, Hint, inputClass, labelClass, selectClass } from '@/components/ui';
 import * as actions from '../actions';
 import { useTracker } from './tracker-context';
 
@@ -57,20 +57,20 @@ function SettingsForm() {
       <h2 className="text-xl font-semibold">Goal, cards & planning date</h2>
       <p className="mt-1 text-sm text-muted">Targets stay editable as Delta confirms future rules.</p>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+      <div className="mt-5 grid items-end gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="s-tier" className={labelClass}>
             Goal tier
           </label>
           <select
             id="s-tier"
-            className={inputClass}
+            className={selectClass}
             value={data.tiers.some((t) => String(t.threshold) === target) ? target : 'custom'}
             onChange={(e) => e.target.value !== 'custom' && setTarget(e.target.value)}
           >
             {data.tiers.map((t) => (
               <option key={t.name} value={t.threshold}>
-                {t.name} Medallion · {fmt(t.threshold)} {unit}
+                {t.name} · {fmt(t.threshold)} {unit}
               </option>
             ))}
             <option value="custom">Custom target</option>
@@ -115,11 +115,15 @@ function SettingsForm() {
                   {c.headstartAmount ? ` · ${fmt(c.headstartAmount)} ${unit} Headstart` : ''}
                 </p>
               </div>
-              <div role="radiogroup" aria-label={shortCardName(c.name)} className="flex overflow-hidden rounded-md border border-line text-xs">
+              <div
+                role="radiogroup"
+                aria-label={shortCardName(c.name)}
+                className="flex divide-x divide-line overflow-hidden rounded-md border border-line text-xs"
+              >
                 {(Object.keys(HOLDING_LABELS) as CardHolding[]).map((h) => (
                   <label
                     key={h}
-                    className={`cursor-pointer px-2.5 py-1.5 ${holdings[c.key] === h ? 'bg-brand text-white' : 'bg-white hover:bg-[#edf3f0]'}`}
+                    className={`cursor-pointer px-3 py-2 transition-colors ${holdings[c.key] === h ? 'bg-brand font-medium text-white' : 'bg-white text-foreground hover:bg-[#edf3f0]'}`}
                   >
                     <input
                       type="radio"

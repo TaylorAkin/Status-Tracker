@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { credit, flightName, totals, type Entry } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
-import { buttonClass, Hint, Panel, PanelHead, Switch } from '@/components/ui';
+import { buttonClass, Hint, inlineSelectClass, Panel, PanelHead, Switch } from '@/components/ui';
+import * as actions from '../actions';
 import { useTracker } from './tracker-context';
 
 const VIEWS = {
@@ -27,11 +28,7 @@ export function FlightsSection() {
       <PanelHead title="Planned flights & account credit" sub="Mark each flight booked when you buy it, and credited when its MQDs hit your account.">
         <label className="flex items-center gap-2 text-xs font-semibold">
           Show flights
-          <select
-            value={view}
-            onChange={(e) => setView(e.target.value as keyof typeof VIEWS)}
-            className="rounded-md border border-[#cdd7d4] bg-white px-3 py-2 text-xs font-normal"
-          >
+          <select value={view} onChange={(e) => setView(e.target.value as keyof typeof VIEWS)} className={`${inlineSelectClass} font-normal`}>
             {Object.entries(VIEWS).map(([key, v]) => (
               <option key={key} value={key}>
                 {v.label}
@@ -67,7 +64,7 @@ export function FlightsSection() {
 }
 
 function FlightCard({ entry: e }: { entry: Entry }) {
-  const { unit, setState, openEntry } = useTracker();
+  const { unit, setState, openEntry, run } = useTracker();
   const name = flightName(e);
   const booked = ['Planned', 'Pending', 'Posted'].includes(e.state);
   const posted = e.state === 'Posted';
@@ -106,9 +103,21 @@ function FlightCard({ entry: e }: { entry: Entry }) {
           onChange={(on) => setState(e.id, on ? 'Posted' : 'Planned', on ? 'Flight moved to actual MQDs.' : 'Flight returned to forecast.')}
         />
       </div>
-      <button className={buttonClass.link} onClick={() => openEntry(e.id)} aria-label={`Edit ${name}`}>
-        Edit
-      </button>
+      <div className="flex shrink-0 flex-col items-start gap-1.5">
+        <button className={buttonClass.link} onClick={() => openEntry(e.id)} aria-label={`Edit ${name}`}>
+          Edit
+        </button>
+        <button
+          className="text-xs text-muted underline hover:text-accent"
+          aria-label={`Delete ${name}`}
+          onClick={() => {
+            if (confirm(`Delete ${name}? This cannot be undone.`))
+              run({ type: 'delete', id: e.id }, () => actions.deleteEntry(e.id), 'Flight deleted.');
+          }}
+        >
+          Delete
+        </button>
+      </div>
     </article>
   );
 }

@@ -10,7 +10,7 @@ export default function Home() {
       </p>
       <div className="mt-8 flex gap-3">
         <Link href="/sign-up" className="rounded-lg bg-foreground px-5 py-3 font-medium text-white hover:bg-foreground/90">
-          Get started free
+          Get started for free
         </Link>
         <Link href="/sign-in" className="rounded-lg border border-line bg-surface px-5 py-3 font-medium">
           Sign in

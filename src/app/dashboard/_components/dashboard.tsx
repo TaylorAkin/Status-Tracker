@@ -61,15 +61,23 @@ export function Dashboard({ userEmail }: { userEmail: string }) {
         <Ledger />
       </div>
 
-      <footer className="mt-6 text-xs leading-relaxed text-muted">
-        <strong>Rule notes.</strong> Delta Platinum Medallion&apos;s published threshold is 15,000 MQDs; StatusTrack carries Delta&apos;s published
-        thresholds forward as a planning assumption for {year} earning. Update your target if Delta announces a change. Redeemable miles alone do not
-        qualify. Forecasts are estimates.{' '}
-        <a href="https://www.delta.com/us/en/skymiles/medallion-program/how-to-qualify" target="_blank" rel="noopener" className="underline">
-          Delta qualification rules
-        </a>
-        .<br />
-        StatusTrack is not affiliated with, endorsed by, or sponsored by Delta Air Lines or American Express. All trademarks belong to their owners.
+      <footer className="mt-6 space-y-1.5 text-xs leading-relaxed text-muted">
+        <p>
+          <strong className="text-foreground">Estimates only.</strong> MQDs here are calculated from what you enter. The MQDs Delta posts to your
+          SkyMiles account are the source of truth, so enter them when you reconcile.
+        </p>
+        <p>
+          <strong className="text-foreground">Rules can change.</strong> Tier thresholds are Delta&apos;s currently published Medallion qualification
+          levels, used as a planning assumption for {year} earning. Update your goal in Settings if Delta announces changes.{' '}
+          <a href="https://www.delta.com/us/en/skymiles/medallion-program/how-to-qualify" target="_blank" rel="noopener" className="underline">
+            Delta&apos;s qualification rules
+          </a>
+          .
+        </p>
+        <p>
+          <strong className="text-foreground">Not affiliated</strong> with Delta Air Lines or American Express. Redeemable SkyMiles do not count
+          toward Medallion status. All trademarks belong to their owners.
+        </p>
       </footer>
 
       <EntryDialog />
