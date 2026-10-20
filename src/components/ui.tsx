@@ -82,12 +82,17 @@ export function Switch({
 }
 
 export const buttonClass = {
-  primary: 'rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-accent disabled:opacity-45',
-  dark: 'rounded-lg bg-foreground px-4 py-2.5 text-sm font-medium text-white hover:bg-foreground/90 disabled:opacity-45',
-  secondary: 'rounded-lg border border-line bg-surface px-4 py-2.5 text-sm hover:bg-[#edf3f0] disabled:opacity-45',
+  primary: 'inline-flex h-10 items-center justify-center rounded-lg bg-brand px-4 text-sm font-medium text-white hover:bg-accent disabled:opacity-45',
+  dark: 'inline-flex h-10 items-center justify-center rounded-lg bg-foreground px-4 text-sm font-medium text-white hover:bg-foreground/90 disabled:opacity-45',
+  secondary:
+    'inline-flex h-10 items-center justify-center rounded-lg border border-line bg-surface px-4 text-sm hover:bg-[#edf3f0] disabled:opacity-45',
   link: 'text-xs text-accent underline hover:text-brand',
 };
 
+// Every text input, date input, and select shares one height (40px, matching buttons).
 export const inputClass =
-  'w-full min-w-0 rounded-md border border-[#cdd7d4] bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand/40 disabled:bg-[#f6f7f6]';
+  'block h-10 w-full min-w-0 rounded-md border border-[#cdd7d4] bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-brand/40 disabled:bg-[#f6f7f6]';
+export const selectClass = `${inputClass} select-chevron`;
+/** Toolbar select that sizes to its content instead of filling the row. */
+export const inlineSelectClass = selectClass.replace('w-full', 'w-auto');
 export const labelClass = 'mb-1.5 block text-xs font-semibold';

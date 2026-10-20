@@ -5,7 +5,7 @@ import { CATEGORIES, credit, flightName, routeMiles, type Category, type Entry, 
 import { fmt, stateLabel } from '@/lib/format';
 import { deltaMethods } from '@/lib/tracker/methods';
 import { ModalDialog } from '@/components/modal-dialog';
-import { buttonClass, Hint, inputClass, labelClass } from '@/components/ui';
+import { buttonClass, Hint, inputClass, labelClass, selectClass } from '@/components/ui';
 import * as actions from '../actions';
 import { useAirports } from './use-airports';
 import { useTracker } from './tracker-context';
@@ -135,7 +135,7 @@ function EntryForm() {
           </label>
           <select
             id="f-category"
-            className={inputClass}
+            className={selectClass}
             value={form.category}
             onChange={(e) => {
               const category = e.target.value as Category;
@@ -171,7 +171,7 @@ function EntryForm() {
           <label htmlFor="f-state" className={labelClass}>
             Earning state
           </label>
-          <select id="f-state" className={inputClass} value={form.state} onChange={(e) => set({ state: e.target.value as EntryState })}>
+          <select id="f-state" className={selectClass} value={form.state} onChange={(e) => set({ state: e.target.value as EntryState })}>
             {(['Planned', 'Potential', 'Pending', 'Posted', 'Cancelled'] as const)
               .filter((s) => s !== 'Potential' || isFlight)
               .map((s) => (
@@ -185,7 +185,7 @@ function EntryForm() {
           <label htmlFor="f-method" className={labelClass}>
             Calculation method
           </label>
-          <select id="f-method" className={inputClass} value={method.key} onChange={(e) => set({ method: e.target.value })}>
+          <select id="f-method" className={selectClass} value={method.key} onChange={(e) => set({ method: e.target.value })}>
             {methods.map((m) => (
               <option key={m.key} value={m.key}>
                 {m.label}
@@ -293,7 +293,20 @@ function EntryForm() {
       <p className="mt-4 rounded-lg bg-[#e9f3f0] p-3.5 text-sm">
         {fmt(estimate)} {unit} · {stateLabel(form.state)}
       </p>
-      <div className="mt-6 flex justify-end gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-end gap-2">
+        {editing && (
+          <button
+            type="button"
+            className="mr-auto rounded-lg px-2 py-2.5 text-sm text-accent hover:underline"
+            onClick={() => {
+              if (!confirm('Delete this entry? This cannot be undone.')) return;
+              run({ type: 'delete', id: editing.id }, () => actions.deleteEntry(editing.id), 'Entry deleted.');
+              closeEntry();
+            }}
+          >
+            Delete
+          </button>
+        )}
         <button type="button" className={buttonClass.secondary} onClick={closeEntry}>
           Cancel
         </button>

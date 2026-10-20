@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { credit, ENTRY_STATES, type EntryState } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
-import { buttonClass, Panel, PanelHead, StatePill } from '@/components/ui';
+import { buttonClass, inlineSelectClass, Panel, PanelHead, StatePill } from '@/components/ui';
 import * as actions from '../actions';
 import { useTracker } from './tracker-context';
 
@@ -20,7 +20,7 @@ export function Ledger() {
           value={state}
           onChange={(e) => setState(e.target.value as EntryState | '')}
           aria-label="Filter by state"
-          className="rounded-md border border-[#cdd7d4] bg-white px-3 py-2 text-sm"
+          className={inlineSelectClass}
         >
           <option value="">All states</option>
           {ENTRY_STATES.map((s) => (

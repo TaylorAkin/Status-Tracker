@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { breakdownLabels, breakdownTotals, earningMix } from '@/lib/engine';
 import { fmt } from '@/lib/format';
-import { Hint, labelClass, Panel, PanelHead } from '@/components/ui';
+import { Hint, labelClass, Panel, PanelHead, selectClass } from '@/components/ui';
 import { useTracker } from './tracker-context';
 
 export function Breakdown() {
@@ -134,12 +134,7 @@ export function EarningMix() {
           <label htmlFor="mix-card" className={labelClass}>
             Card rate for additional spend
           </label>
-          <select
-            id="mix-card"
-            value={cardDivisor}
-            onChange={(e) => setCardDivisor(Number(e.target.value))}
-            className="w-full rounded-md border border-[#cdd7d4] bg-white px-3 py-2.5 text-xs"
-          >
+          <select id="mix-card" value={cardDivisor} onChange={(e) => setCardDivisor(Number(e.target.value))} className={selectClass}>
             <option value={10}>Delta Reserve cards · 1 MQD / $10</option>
             <option value={20}>Delta Platinum cards · 1 MQD / $20</option>
           </select>
