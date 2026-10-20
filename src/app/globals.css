@@ -9,6 +9,11 @@
   --surface: #ffffff;
   --brand: #003366;
   --accent: #b5122b;
+  /* Front page sky, matched to the Stratus Status artwork. Text on blue always sits on --sky-deep (white 5.0:1). */
+  --sky: #2f9ff9;
+  --sky-deep: #1570c8;
+  --sky-ink: #1667b8;
+  --navy: #1b2547;
 }
 
 @theme inline {
@@ -19,13 +24,35 @@
   --color-surface: var(--surface);
   --color-brand: var(--brand);
   --color-accent: var(--accent);
+  --color-sky: var(--sky);
+  --color-sky-deep: var(--sky-deep);
+  --color-sky-ink: var(--sky-ink);
+  --color-navy: var(--navy);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Front page hero: the gauge fills left to right on load (--gauge is the filled share of a pathLength of 100). */
+@theme {
+  --animate-gauge-fill: gauge-fill 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+
+  @keyframes gauge-fill {
+    from {
+      stroke-dashoffset: var(--gauge);
+    }
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* In-page anchor links scroll smoothly; route changes stay instant via data-scroll-behavior on <html>. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Native selects render at different heights per browser; draw our own chevron instead. */

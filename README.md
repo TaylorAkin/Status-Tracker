@@ -1,6 +1,6 @@
-# Status-Tracker
+# Stratus Status
 
-Taylor and Karl's status tracker website: plan and track Delta SkyMiles Medallion Qualifying Dollars (MQDs) from flights, card spend, Headstarts, and bonuses.
+Taylor and Karl's airline status tracker (stratusstatus.com): plan and track Delta SkyMiles Medallion Qualifying Dollars (MQDs) from flights, card spend, Headstarts, and bonuses.
 
 ## Stack
 
