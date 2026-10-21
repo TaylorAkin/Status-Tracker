@@ -19,7 +19,7 @@ export function Ledger() {
       <PanelHead
         title={
           <>
-            Earning activity
+            All earnings
             <InfoTip id="ledger.states" />
           </>
         }
@@ -38,9 +38,6 @@ export function Ledger() {
             </option>
           ))}
         </select>
-        <button className={buttonClass.dark} onClick={() => openEntry()}>
-          + Add earning
-        </button>
       </PanelHead>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-[13px]">

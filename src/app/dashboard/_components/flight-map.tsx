@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { credit, flightArc, flightName, flightRouteCodes, mapPoint } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
-import { buttonClass, Panel, PanelHead, Switch } from '@/components/ui';
+import { buttonClass, Switch } from '@/components/ui';
 import { useAirports } from './use-airports';
 import { useTracker } from './tracker-context';
 
@@ -24,6 +24,7 @@ function routePath(points: [number, number][], offset: number) {
     .join('');
 }
 
+/** The flights tab's map view: dashed routes are still to post, solid routes have posted. */
 export function FlightMap() {
   const { data, unit } = useTracker();
   const { airports, error } = useAirports();
@@ -61,35 +62,34 @@ export function FlightMap() {
   const missing = active.length - rows.length;
 
   return (
-    <Panel>
-      <PanelHead
-        title={`${data.tracker.statusYear} Flight Map`}
-        sub="Potential and planned routes become solid when their MQDs post to your account."
-      >
-        <Switch label="IATA labels" checked={showIata} onChange={setShowIata} />
-        <button className={buttonClass.secondary} onClick={() => setWorldView(false)}>
-          Fit routes
-        </button>
-        <button className={buttonClass.secondary} onClick={() => setWorldView(true)}>
-          World view
-        </button>
-      </PanelHead>
-      <div className="mb-4 flex flex-wrap gap-5 text-[11px] text-muted">
-        <span className="inline-flex items-center gap-2">
-          <i className="w-6 border-t-2 border-dashed border-[#62757c]" />
-          Potential / planned / pending
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <i className="w-6 border-t-2 border-[#62757c]" />
-          Posted
-        </span>
+    <div data-help="flight-map">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-5 text-[11px] text-muted">
+          <span className="inline-flex items-center gap-2">
+            <i className="w-6 border-t-2 border-dashed border-[#62757c]" />
+            Potential / planned / pending
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <i className="w-6 border-t-2 border-[#62757c]" />
+            Posted
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Switch size="sm" label="IATA labels" checked={showIata} onChange={setShowIata} />
+          <button className={`${buttonClass.secondary} h-8 px-3 text-xs`} onClick={() => setWorldView(false)}>
+            Fit routes
+          </button>
+          <button className={`${buttonClass.secondary} h-8 px-3 text-xs`} onClick={() => setWorldView(true)}>
+            World view
+          </button>
+        </div>
       </div>
 
       <div className="relative overflow-hidden rounded-xl border border-[#dbe6e8] bg-[#f0f6f7]">
         <svg
           viewBox={box.join(' ')}
           role="img"
-          aria-label={`Map of ${rows.length} flights; dashed forecast routes and solid credited routes`}
+          aria-label={`Map of ${rows.length} flights; dashed forecast routes and solid posted routes`}
           className="block aspect-[2.3] h-auto max-h-[480px] min-h-[240px] w-full"
         >
           <rect width="1000" height="500" fill="#f0f6f7" />
@@ -187,7 +187,7 @@ export function FlightMap() {
       </div>
       <div className="mt-2 flex flex-wrap justify-between gap-3 text-[10px] text-muted">
         <span>
-          {rows.length} mapped flights · {posted} credited · {rows.length - posted} awaiting credit
+          {rows.length} mapped flights · {posted} posted · {rows.length - posted} still to post
           {missing ? ` · ${missing} need valid airport routes` : ''}
         </span>
         <span>
@@ -201,6 +201,6 @@ export function FlightMap() {
           </a>
         </span>
       </div>
-    </Panel>
+    </div>
   );
 }

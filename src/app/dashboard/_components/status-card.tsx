@@ -54,8 +54,7 @@ export function StatusCard() {
           ))}
         </dl>
         <p className="mt-3 border-t border-line pt-3 text-xs text-muted">
-          Forecast <strong className="text-foreground">{fmt(t.forecast)}</strong> {unit} ({percent(s.forecastPercent)} of goal) = all four
-          states.
+          Forecast <strong className="text-foreground">{fmt(t.forecast)}</strong> {unit} ({percent(s.forecastPercent)} of goal) = all four states.
           <InfoTip id="summary.forecast" /> Earning window: Jan 1 – Dec 31, {tracker.statusYear}.
         </p>
       </div>

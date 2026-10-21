@@ -21,15 +21,17 @@ export function MonthlySpendSection() {
       <PanelHead
         title={
           <>
-            Monthly credit-card earnings
+            Monthly card spend
             <InfoTip id="monthly-spend" />
           </>
         }
-        sub="Plan all twelve months for each card. Save edits together and mark each month credited when its MQDs post."
+        sub={
+          <>
+            Posted <strong className="text-brand">{precise(actual)}</strong> · Forecast <strong className="text-brand">{precise(forecast)}</strong>{' '}
+            {unit}. Plan each month, save, and switch Credited on when it posts.
+          </>
+        }
       />
-      <p className="mb-5 rounded-lg border border-line px-4 py-3 text-xs text-muted">
-        {data.tracker.statusYear} saved card earnings: {precise(actual)} posted / {precise(forecast)} forecast {unit}.
-      </p>
       {cards.length ? (
         <div className="grid gap-4 md:grid-cols-2">
           {cards.map(({ tc, card }) => (
@@ -39,10 +41,6 @@ export function MonthlySpendSection() {
       ) : (
         <EmptyState>Choose your Delta cards in Settings to plan monthly spend.</EmptyState>
       )}
-      <Hint>
-        Monthly entries feed the activity log, progress card, tiers, and chart. Eligible spend excludes returns and ineligible transactions. Enter the
-        exact airline-posted credit to reconcile rounding.
-      </Hint>
     </Panel>
   );
 }

@@ -26,7 +26,7 @@ export function HeadstartsSection() {
       <PanelHead
         title={
           <>
-            Card MQD Headstarts
+            Card Headstarts
             <InfoTip id="headstarts" />
           </>
         }
@@ -130,9 +130,6 @@ export function HeadstartsSection() {
           to add their Headstarts and monthly spend.
         </EmptyState>
       )}
-      <Hint>
-        Headstart dates are placeholders until you set the expected credit date. Toggling Credited moves the same credit between Planned and Posted.
-      </Hint>
     </Panel>
   );
 }

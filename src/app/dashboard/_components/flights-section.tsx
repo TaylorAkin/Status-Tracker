@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useSyncExternalStore } from 'react';
-import { credit, flightName, flightRouteCodes, groupTrips, totals, type Entry } from '@/lib/engine';
+import { credit, flightName, groupTrips, totals, tripPath, type Entry } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
-import { buttonClass, EmptyState, Hint, inlineSelectClass, Panel, PanelHead, Switch } from '@/components/ui';
+import { buttonClass, EmptyState, inlineSelectClass, Panel, PanelHead, Switch } from '@/components/ui';
 import * as actions from '../actions';
+import { FlightMap } from './flight-map';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
 const VIEWS = {
-  active: { label: 'All active flights', test: (e: Entry) => e.state !== 'Cancelled' },
+  active: { label: 'All flights', test: (e: Entry) => e.state !== 'Cancelled' },
   potential: { label: 'Potential flights', test: (e: Entry) => e.state === 'Potential' },
-  awaiting: { label: 'Awaiting credit', test: (e: Entry) => ['Potential', 'Planned', 'Pending'].includes(e.state) },
-  posted: { label: 'Credited to account', test: (e: Entry) => e.state === 'Posted' },
+  awaiting: { label: 'Still to post', test: (e: Entry) => ['Potential', 'Planned', 'Pending'].includes(e.state) },
+  posted: { label: 'Posted', test: (e: Entry) => e.state === 'Posted' },
 } as const;
 
 type Layout = 'trip' | 'leg';
@@ -43,42 +44,34 @@ const layoutStore = {
 export function FlightsSection() {
   const { data, activeEntries, unit, setTripOpen } = useTracker();
   const [view, setView] = useState<keyof typeof VIEWS>('active');
+  const [display, setDisplay] = useState<'list' | 'map'>('list');
   const layout = useSyncExternalStore(layoutStore.subscribe, layoutStore.get, () => 'trip' as const);
   const flights = data.entries.filter((e) => e.category === 'Flights');
   const rows = flights.filter(VIEWS[view].test).sort((a, b) => a.date.localeCompare(b.date) || a.description.localeCompare(b.description));
   const t = totals(activeEntries, 'DL', 'Flights');
   const awaiting = flights.filter((e) => VIEWS.awaiting.test(e)).length;
+  const toggle = (on: boolean) => `rounded-md px-2.5 py-1.5 ${on ? 'bg-foreground text-white' : 'hover:bg-[#edf3f0]'}`;
 
   return (
     <Panel data-help="flights">
       <PanelHead
         title={
           <>
-            Planned flights &amp; account credit
+            Flights
             <InfoTip id="flights.states" />
           </>
         }
-        sub="Mark each flight booked when you buy it, and credited when its MQDs hit your account."
+        sub={
+          <>
+            Posted <strong className="text-brand">{fmt(t.posted)}</strong> · Forecast <strong className="text-brand">{fmt(t.forecast)}</strong> {unit}{' '}
+            · {awaiting} still to post
+          </>
+        }
       >
-        <label className="flex items-center gap-2 text-xs font-semibold">
-          Show flights
-          <select value={view} onChange={(e) => setView(e.target.value as keyof typeof VIEWS)} className={`${inlineSelectClass} font-normal`}>
-            {Object.entries(VIEWS).map(([key, v]) => (
-              <option key={key} value={key}>
-                {v.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div role="group" aria-label="Group flights" className="inline-flex rounded-lg border border-line p-0.5 text-xs">
-          {(['trip', 'leg'] as const).map((l) => (
-            <button
-              key={l}
-              aria-pressed={layout === l}
-              onClick={() => layoutStore.set(l)}
-              className={`rounded-md px-2.5 py-1.5 ${layout === l ? 'bg-foreground text-white' : 'hover:bg-[#edf3f0]'}`}
-            >
-              {l === 'trip' ? 'By trip' : 'By leg'}
+        <div role="group" aria-label="Show flights as" className="inline-flex rounded-lg border border-line p-0.5 text-xs">
+          {(['list', 'map'] as const).map((d) => (
+            <button key={d} aria-pressed={display === d} onClick={() => setDisplay(d)} className={toggle(display === d)}>
+              {d === 'list' ? 'List' : 'Map'}
             </button>
           ))}
         </div>
@@ -87,45 +80,48 @@ export function FlightsSection() {
         </button>
       </PanelHead>
 
-      <p className="mb-4 rounded-lg border border-line bg-[#f9eef1]/50 px-4 py-3 text-xs leading-relaxed">
-        Posted <strong className="text-brand">{fmt(t.posted)}</strong> · Forecast <strong className="text-brand">{fmt(t.forecast)}</strong> {unit} ·{' '}
-        {awaiting} awaiting credit
-      </p>
-
-      <div className="grid gap-x-4 gap-y-2 md:grid-cols-2">
-        {rows.length ? (
-          layout === 'leg' ? (
-            rows.map((e) => <FlightCard key={e.id} entry={e} />)
-          ) : (
-            groupTrips(rows).map((g) =>
-              g.tripId ? <TripCard key={g.tripId} tripId={g.tripId} legs={g.legs} /> : <FlightCard key={g.legs[0].id} entry={g.legs[0]} />,
-            )
-          )
-        ) : (
-          <EmptyState className="col-span-full">
-            {flights.length ? 'No flights match this view.' : 'No flights entered yet. Add your planned trips to start tracking their MQDs.'}
-          </EmptyState>
-        )}
-      </div>
-      <Hint>
-        Potential flights stay in the forecast. Booked moves a flight to Planned; Credited moves its MQDs to Posted. Use Edit to reconcile the exact
-        credit and activity date.
-      </Hint>
+      {display === 'map' ? (
+        <FlightMap />
+      ) : (
+        <>
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-2 text-xs font-semibold">
+              Show
+              <select value={view} onChange={(e) => setView(e.target.value as keyof typeof VIEWS)} className={`${inlineSelectClass} h-8 font-normal`}>
+                {Object.entries(VIEWS).map(([key, v]) => (
+                  <option key={key} value={key}>
+                    {v.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div role="group" aria-label="Group flights" className="inline-flex rounded-lg border border-line p-0.5 text-xs">
+              {(['trip', 'leg'] as const).map((l) => (
+                <button key={l} aria-pressed={layout === l} onClick={() => layoutStore.set(l)} className={toggle(layout === l)}>
+                  {l === 'trip' ? 'By trip' : 'By leg'}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="grid gap-x-4 gap-y-2 md:grid-cols-2">
+            {rows.length ? (
+              layout === 'leg' ? (
+                rows.map((e) => <FlightCard key={e.id} entry={e} />)
+              ) : (
+                groupTrips(rows).map((g) =>
+                  g.tripId ? <TripCard key={g.tripId} tripId={g.tripId} legs={g.legs} /> : <FlightCard key={g.legs[0].id} entry={g.legs[0]} />,
+                )
+              )
+            ) : (
+              <EmptyState className="col-span-full">
+                {flights.length ? 'No flights match this view.' : 'No flights yet. Add the trips you’ve taken or booked to track their MQDs.'}
+              </EmptyState>
+            )}
+          </div>
+        </>
+      )}
     </Panel>
   );
-}
-
-/** "DCA → ATL → LAX → DCA", breaking with " · " where one leg doesn't start where the last one landed. */
-function tripPath(legs: Entry[]): string {
-  const parts: string[][] = [];
-  for (const e of legs) {
-    const codes = flightRouteCodes(e);
-    if (codes.length < 2) continue;
-    const last = parts.at(-1);
-    if (last && last.at(-1) === codes[0]) last.push(...codes.slice(1));
-    else parts.push([...codes]);
-  }
-  return parts.map((p) => p.join(' → ')).join(' · ');
 }
 
 function TripCard({ tripId, legs }: { tripId: string; legs: Entry[] }) {

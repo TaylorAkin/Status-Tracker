@@ -9,7 +9,7 @@ export const metadata = { title: 'Dashboard' };
 
 export default function DashboardPage() {
   return (
-    <main className="mx-auto w-full max-w-[1200px] px-4 py-9 sm:px-7">
+    <main className="mx-auto w-full max-w-[1200px] px-4 pb-9 sm:px-7">
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardContent />
       </Suspense>
@@ -31,11 +31,12 @@ async function DashboardContent() {
 
 function DashboardSkeleton() {
   return (
-    <div className="animate-pulse" aria-label="Loading your tracker">
-      <div className="mb-8 h-24 w-80 rounded-lg bg-line" />
-      <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
-        <div className="h-[640px] rounded-2xl bg-line" />
-        <div className="h-[640px] rounded-2xl bg-line" />
+    <div className="animate-pulse pt-4" aria-label="Loading your tracker">
+      <div className="mb-8 h-20 rounded-lg bg-line" />
+      <div className="h-[260px] rounded-2xl bg-line" />
+      <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <div className="h-[420px] rounded-2xl bg-line" />
+        <div className="h-[420px] rounded-2xl bg-line" />
       </div>
     </div>
   );

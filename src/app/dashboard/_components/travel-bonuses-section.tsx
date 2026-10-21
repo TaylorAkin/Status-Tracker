@@ -15,11 +15,11 @@ const TYPES = [
 export function TravelBonusesSection() {
   const { data, unit, setState, openEntry } = useTracker();
   return (
-    <Panel>
+    <Panel data-help="travel-bonuses">
       <PanelHead
         title={
           <>
-            Delta Stays &amp; rental car bonus MQDs
+            Delta Stays and rental car bonuses
             <InfoTip id="travel-bonuses" />
           </>
         }
@@ -84,10 +84,6 @@ export function TravelBonusesSection() {
           );
         })}
       </div>
-      <Hint>
-        Enter the bonus MQDs from your offer or account. Use the qualifying activity date, keep expected earnings Planned, and mark them credited
-        when they post.
-      </Hint>
     </Panel>
   );
 }

@@ -1,43 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { breakdownLabels, breakdownTotals, earningMix } from '@/lib/engine';
+import { earningMix } from '@/lib/engine';
 import { fmt } from '@/lib/format';
-import { Hint, labelClass, Panel, PanelHead, selectClass } from '@/components/ui';
+import { labelClass, Panel, PanelHead, selectClass } from '@/components/ui';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
-
-export function Breakdown() {
-  const { activeEntries, unit } = useTracker();
-  return (
-    <Panel data-help="breakdown">
-      <PanelHead
-        title={
-          <>
-            Where earnings come from
-            <InfoTip id="breakdown" />
-          </>
-        }
-        sub={`Posted / forecast ${unit}`}
-      />
-      <div className="grid grid-cols-[1fr_85px_85px] border-b border-line pb-3 text-[11px] uppercase text-muted">
-        <span>Category</span>
-        <span className="text-right">Posted</span>
-        <span className="text-right">Forecast</span>
-      </div>
-      {breakdownLabels('DL').map((label) => {
-        const t = breakdownTotals(activeEntries, 'DL', label);
-        return (
-          <div key={label} className="grid grid-cols-[1fr_85px_85px] border-b border-line py-3 text-[13px]">
-            <span>{label}</span>
-            <span className="text-right tabular-nums">{fmt(t.posted)}</span>
-            <span className="text-right tabular-nums">{fmt(t.forecast)}</span>
-          </div>
-        );
-      })}
-    </Panel>
-  );
-}
 
 const SEGMENT_COLORS = { flights: '#426f94', cards: '#b5122b', bonuses: '#a3adb5' };
 
@@ -58,13 +26,13 @@ export function EarningMix() {
       <PanelHead
         title={
           <>
-            Find your earning mix
+            How to close the gap
             <InfoTip id="mix" />
           </>
         }
-        sub="Your forecast is the starting point. Split the remaining gap between flights and card spend."
+        sub="Split what your forecast leaves between flights and card spend. Nothing here is saved."
       />
-      <div className="grid items-start gap-8 md:grid-cols-[1.35fr_1fr]">
+      <div className="grid items-start gap-6">
         <div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {(
@@ -152,7 +120,6 @@ export function EarningMix() {
             <option value={10}>Delta Reserve cards · 1 MQD / $10</option>
             <option value={20}>Delta Platinum cards · 1 MQD / $20</option>
           </select>
-          <Hint>Planning scenario only. Your saved flights and card earnings stay as entered.</Hint>
         </div>
       </div>
     </Panel>
