@@ -24,6 +24,12 @@ export interface Entry {
   notes: string;
   route?: string;
   roundtrip?: boolean;
+  /** Set on flight legs saved together as one trip. */
+  tripId?: string;
+  /** 0 = outbound ticket, 1 = return ticket. */
+  ticket?: number;
+  /** Order of the leg within its ticket. */
+  leg?: number;
   cardKey?: string;
 }
 

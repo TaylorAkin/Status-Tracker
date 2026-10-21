@@ -3,7 +3,7 @@ import type { Entry } from './types';
 /** IATA code → [lat, lon, name], as in public/data/airports.json. */
 export type Airports = Record<string, [number, number, string]>;
 
-const SEPARATORS = /[\s,;>→–—-]+/;
+export const SEPARATORS = /[\s,;>→–—-]+/;
 
 /** Airport codes from the explicit route, falling back to a route written in the description. */
 export function flightRouteCodes(e: Pick<Entry, 'route' | 'description'>): string[] {
