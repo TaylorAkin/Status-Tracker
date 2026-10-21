@@ -25,7 +25,8 @@ type Form = {
   notes: string;
 };
 
-const STATES: EntryState[] = ['Potential', 'Planned', 'Pending', 'Posted'];
+// Matches the edit form: Potential is set with a flight's Booked switch.
+const STATES: EntryState[] = ['Planned', 'Pending', 'Posted'];
 const TICKETS = ['Outbound', 'Return'];
 
 export function TripDialog() {
