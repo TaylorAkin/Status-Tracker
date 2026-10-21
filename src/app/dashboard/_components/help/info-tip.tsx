@@ -20,7 +20,7 @@ export function InfoTip({ id, children }: { id: TipId; children?: ReactNode }) {
           ref={anchorRef}
           type="button"
           popoverTarget={popoverId}
-          className="cursor-help underline decoration-current/50 decoration-dotted underline-offset-[3px] hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+          className="underline decoration-current/50 decoration-dotted underline-offset-[3px] hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
         >
           {children}
         </button>
