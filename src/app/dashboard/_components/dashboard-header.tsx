@@ -53,7 +53,8 @@ export function DashboardHeader({ userEmail }: { userEmail: string }) {
   const current = useCurrentSection();
 
   return (
-    <header className="sticky top-0 z-30 -mx-4 mb-6 border-b border-line bg-background/90 px-4 backdrop-blur sm:-mx-7 sm:px-7">
+    // On phones only the section nav sticks (the wrapper becomes `contents`), so the title and buttons scroll away.
+    <header className="z-30 mb-6 max-sm:contents sm:sticky sm:top-0 sm:-mx-7 sm:border-b sm:border-line sm:bg-background/90 sm:px-7 sm:backdrop-blur">
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3">
         <div className="flex min-w-0 items-baseline gap-3">
           <h1 className="text-lg font-semibold tracking-tight">Delta Status Tracker</h1>
@@ -78,7 +79,10 @@ export function DashboardHeader({ userEmail }: { userEmail: string }) {
           </PopoverMenu>
         </div>
       </div>
-      <nav aria-label="Dashboard sections" className="-mb-px flex gap-5 overflow-x-auto text-sm">
+      <nav
+        aria-label="Dashboard sections"
+        className="-mb-px flex gap-5 overflow-x-auto text-sm max-sm:sticky max-sm:top-0 max-sm:z-30 max-sm:-mx-4 max-sm:mb-6 max-sm:border-b max-sm:border-line max-sm:bg-background/95 max-sm:px-4 max-sm:pt-2.5 max-sm:backdrop-blur"
+      >
         {SECTIONS.map((s) => (
           <a
             key={s.id}
