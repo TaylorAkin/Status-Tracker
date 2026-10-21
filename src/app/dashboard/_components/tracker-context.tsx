@@ -7,7 +7,9 @@ import * as actions from '../actions';
 
 type Op =
   | { type: 'upsert'; entry: Entry }
+  | { type: 'addMany'; entries: Entry[] }
   | { type: 'delete'; id: string }
+  | { type: 'deleteTrip'; tripId: string }
   | { type: 'patch'; id: string; patch: Partial<Entry> }
   | { type: 'settings'; target: number; asOf: string }
   | { type: 'cardIncluded'; cardKey: string; included: boolean }
@@ -22,8 +24,12 @@ function reducer(state: DashboardData, op: Op): DashboardData {
         entries: exists ? state.entries.map((e) => (e.id === op.entry.id ? op.entry : e)) : [...state.entries, op.entry],
       };
     }
+    case 'addMany':
+      return { ...state, entries: [...state.entries, ...op.entries] };
     case 'delete':
       return { ...state, entries: state.entries.filter((e) => e.id !== op.id) };
+    case 'deleteTrip':
+      return { ...state, entries: state.entries.filter((e) => e.tripId !== op.tripId) };
     case 'patch':
       return { ...state, entries: state.entries.map((e) => (e.id === op.id ? { ...e, ...op.patch } : e)) };
     case 'settings':
@@ -61,6 +67,9 @@ interface TrackerContextValue {
   openEntry: (id?: string, preset?: EntryPreset) => void;
   entryDialog: { open: boolean; id?: string; preset?: EntryPreset };
   closeEntry: () => void;
+  /** The multi-leg "Add flight" dialog. */
+  tripOpen: boolean;
+  setTripOpen: (open: boolean) => void;
   settingsOpen: boolean;
   setSettingsOpen: (open: boolean) => void;
 }
@@ -80,6 +89,7 @@ export function TrackerProvider({ initial, children }: { initial: DashboardData;
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [entryDialog, setEntryDialog] = useState<TrackerContextValue['entryDialog']>({ open: false });
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [tripOpen, setTripOpen] = useState(false);
 
   const toast = useCallback((message: string) => {
     setToastMessage(message);
@@ -117,10 +127,12 @@ export function TrackerProvider({ initial, children }: { initial: DashboardData;
       openEntry: (id, preset) => setEntryDialog({ open: true, id, preset }),
       entryDialog,
       closeEntry: () => setEntryDialog({ open: false }),
+      tripOpen,
+      setTripOpen,
       settingsOpen,
       setSettingsOpen,
     };
-  }, [data, pending, run, toast, entryDialog, settingsOpen]);
+  }, [data, pending, run, toast, entryDialog, tripOpen, settingsOpen]);
 
   return (
     <TrackerContext value={value}>

@@ -123,7 +123,16 @@ function EntryForm() {
       cardKey: method.cardKey ?? editing?.cardKey ?? null,
     };
     if (!input.description) return;
-    const optimistic: Entry = { ...input, program: 'DL', route: input.route ?? undefined, cardKey: input.cardKey ?? undefined };
+    // Trip fields aren't editable here; saveEntry leaves them as they are, so keep them on the optimistic row too.
+    const optimistic: Entry = {
+      ...input,
+      program: 'DL',
+      route: input.route ?? undefined,
+      cardKey: input.cardKey ?? undefined,
+      tripId: editing?.tripId,
+      ticket: editing?.ticket,
+      leg: editing?.leg,
+    };
     run({ type: 'upsert', entry: optimistic }, () => actions.saveEntry(input), 'Earning saved.');
     closeEntry();
   }
@@ -229,10 +238,13 @@ function EntryForm() {
               onChange={(e) => set({ route: e.target.value })}
               aria-invalid={!!routeError}
             />
-            <label className="mt-3 flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={form.roundtrip} onChange={(e) => set({ roundtrip: e.target.checked })} /> Round trip: same route in
-              reverse
-            </label>
+            {/* A trip leg's return is its own leg, so it never doubles as a round trip. */}
+            {!editing?.tripId && (
+              <label className="mt-3 flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={form.roundtrip} onChange={(e) => set({ roundtrip: e.target.checked })} /> Round trip: same route in
+                reverse
+              </label>
+            )}
             <Hint className={routeError ? 'text-accent' : ''}>{routeError || routeInfo}</Hint>
           </div>
         )}

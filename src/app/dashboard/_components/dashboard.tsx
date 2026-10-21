@@ -13,6 +13,7 @@ import { Ledger } from './ledger';
 import { MonthlySpendSection } from './monthly-spend-section';
 import { ProgressChart } from './progress-chart';
 import { SettingsDialog } from './settings-dialog';
+import { TripDialog } from './trip-dialog';
 import { SummaryCard } from './summary-card';
 import { TravelBonusesSection } from './travel-bonuses-section';
 import { useTracker } from './tracker-context';
@@ -86,6 +87,7 @@ export function Dashboard({ userEmail }: { userEmail: string }) {
       </footer>
 
       <EntryDialog />
+      <TripDialog />
       <SettingsDialog />
     </>
   );

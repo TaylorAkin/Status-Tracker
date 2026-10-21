@@ -26,6 +26,16 @@ export const entryInput = z
   });
 export type EntryInput = z.input<typeof entryInput>;
 
+/** Flight legs saved together as one trip; each leg is an ordinary entry. */
+export const tripInput = z.object({
+  tripId: z.uuid(),
+  legs: z
+    .array(z.object({ entry: entryInput, ticket: z.number().int().min(0).max(1), leg: z.number().int().min(0).max(19) }))
+    .min(1)
+    .max(40),
+});
+export type TripInput = z.input<typeof tripInput>;
+
 export const settingsInput = z.object({
   target: z.number().int().min(1).max(1_000_000),
   asOf: isoDate,

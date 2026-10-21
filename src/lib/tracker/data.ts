@@ -47,6 +47,9 @@ export function toEngineEntry(row: typeof entry.$inferSelect): Entry {
     notes: row.notes,
     route: row.route ?? undefined,
     roundtrip: row.roundtrip,
+    tripId: row.tripId ?? undefined,
+    ticket: row.ticket ?? undefined,
+    leg: row.leg ?? undefined,
     cardKey: row.cardKey ?? undefined,
   };
 }

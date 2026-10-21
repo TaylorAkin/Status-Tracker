@@ -9,7 +9,7 @@ import { ENTRY_STATES } from '@/lib/engine';
 import { requireUser } from '@/lib/dal';
 import { getOrCreateTracker } from '@/lib/tracker/data';
 import { HEADSTART_METHOD } from '@/lib/tracker/methods';
-import { cardHoldingsInput, entryInput, monthlySpendInput, settingsInput, type EntryInput } from '@/lib/tracker/schemas';
+import { cardHoldingsInput, entryInput, monthlySpendInput, settingsInput, tripInput, type EntryInput, type TripInput } from '@/lib/tracker/schemas';
 import { TOUR_KEYS, TOUR_STATUSES, type TourKey, type TourStatus } from '@/lib/tracker/types';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -66,6 +66,43 @@ export async function saveEntry(input: EntryInput): Promise<string> {
     .returning({ id: entry.id });
   refresh();
   return row.id;
+}
+
+/** Saves a new trip's legs as flight entries sharing one tripId. */
+export async function saveTrip(input: TripInput) {
+  const t = await currentTracker();
+  const { tripId, legs } = tripInput.parse(input);
+  for (const { entry: e } of legs) {
+    if (e.category !== 'Flights') throw new Error('A trip can only contain flights.');
+    assertInYear(e.date, t.statusYear);
+  }
+  await db.insert(entry).values(
+    legs.map(({ entry: e, ticket, leg }) => ({
+      ...(e.id ? { id: e.id } : {}),
+      trackerId: t.id,
+      category: e.category,
+      state: e.state,
+      date: e.date,
+      description: e.description,
+      method: e.method,
+      amount: e.amount,
+      rate: e.rate,
+      override: e.override,
+      notes: e.notes,
+      route: e.route || null,
+      roundtrip: false,
+      tripId,
+      ticket,
+      leg,
+    })),
+  );
+  refresh();
+}
+
+export async function deleteTrip(tripId: string) {
+  const t = await currentTracker();
+  await db.delete(entry).where(and(eq(entry.trackerId, t.id), eq(entry.tripId, z.uuid().parse(tripId))));
+  refresh();
 }
 
 export async function deleteEntry(id: string) {

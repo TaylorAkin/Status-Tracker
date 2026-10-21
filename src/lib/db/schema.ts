@@ -1,4 +1,4 @@
-import { boolean, date, doublePrecision, index, integer, pgTable, primaryKey, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
+import { boolean, date, doublePrecision, index, integer, pgTable, primaryKey, smallint, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { CATEGORIES, ENTRY_STATES } from '../engine/types';
 import { TOUR_KEYS, TOUR_STATUSES } from '../tracker/types';
 import { user } from './auth-schema';
@@ -100,6 +100,12 @@ export const entry = pgTable(
     notes: text('notes').notNull().default(''),
     route: text('route'),
     roundtrip: boolean('roundtrip').notNull().default(false),
+    /** Legs saved together as one trip share this id; null for standalone entries. */
+    tripId: uuid('trip_id'),
+    /** Within a trip: 0 = outbound ticket, 1 = return ticket. */
+    ticket: smallint('ticket'),
+    /** Order of the leg within its ticket. */
+    leg: smallint('leg'),
     cardKey: text('card_key').references(() => card.key),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),

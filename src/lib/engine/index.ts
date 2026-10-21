@@ -5,3 +5,4 @@ export * from './chart';
 export * from './mix';
 export * from './breakdown';
 export * from './routes';
+export * from './trips';
