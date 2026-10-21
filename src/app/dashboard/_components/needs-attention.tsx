@@ -112,7 +112,7 @@ function AttentionList({ items }: { items: AttentionItem[] }) {
   const [all, setAll] = useState(false);
   const shown = all ? items : items.slice(0, SHOWN);
   return (
-    <Panel aria-labelledby="attention-title" data-help="attention" className="border-[#ecd9a8] bg-[#fffaf0]">
+    <Panel aria-labelledby="attention-title" data-help="attention" className="border-[#ecd9a8]! bg-[#fffaf0]!">
       <h2 id="attention-title" className="mb-3 flex items-center gap-2 text-lg font-semibold tracking-tight">
         Needs attention
         <span className="rounded-full bg-[#f4ebd8] px-2 py-0.5 text-xs font-semibold text-[#796039]">{items.length}</span>
