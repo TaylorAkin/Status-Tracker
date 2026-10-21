@@ -55,20 +55,20 @@ export function HeadstartsSection() {
                   <h3 className="text-[13px] font-semibold leading-snug text-brand">{card.name}</h3>
                   {e ? <StatePill state={excluded ? 'Cancelled' : e.state}>{excluded ? 'Not added' : undefined}</StatePill> : null}
                 </div>
-                <p className="mt-2 text-[11px] text-muted">{tc.potential ? 'Potential card · Annual MQD Headstart' : 'Annual MQD Headstart'}</p>
+                <p className="mt-2 text-[11px] text-muted">{tc.potential ? 'Considering · Annual MQD Headstart' : 'Annual MQD Headstart'}</p>
                 <strong className="my-3 block text-[28px] text-brand">
                   {fmt(e ? credit(e) : card.headstartAmount!)} <small className="text-[13px] font-normal">{unit}</small>
                 </strong>
                 <div className="space-y-3">
                   {tc.potential && (
                     <Switch
-                      label="Include this potential card in forecast"
+                      label="Include this card in forecast"
                       checked={tc.included}
                       onChange={(on) =>
                         run(
                           { type: 'cardIncluded', cardKey: card.key, included: on },
                           () => actions.setCardIncluded(card.key, on),
-                          on ? 'Potential card included in your forecast.' : 'Potential card excluded.',
+                          on ? 'Card included in your forecast.' : 'Card excluded from your forecast.',
                         )
                       }
                     />
@@ -79,7 +79,7 @@ export function HeadstartsSection() {
                       checked={e.state === 'Posted'}
                       disabled={excluded}
                       onChange={(on) =>
-                        setState(e.id, on ? 'Posted' : 'Planned', on ? 'Headstart moved to actual MQDs.' : 'Headstart returned to projected.')
+                        setState(e.id, on ? 'Posted' : 'Planned', on ? 'Headstart moved to Posted.' : 'Headstart returned to Planned.')
                       }
                     />
                   )}
@@ -112,8 +112,8 @@ export function HeadstartsSection() {
                       {excluded
                         ? 'Excluded until you include this card.'
                         : e.state === 'Posted'
-                          ? 'Counts toward actual MQDs.'
-                          : 'Counts toward projected MQDs only.'}
+                          ? 'Counts toward posted MQDs.'
+                          : 'Counts toward your forecast only.'}
                     </Hint>
                     <button className={`${buttonClass.link} mt-3`} onClick={() => openEntry(e.id)}>
                       Edit amount / details
@@ -134,7 +134,7 @@ export function HeadstartsSection() {
         </div>
       )}
       <Hint>
-        Headstart dates are placeholders until you set the expected credit date. Toggling Credited moves the same credit between projected and actual.
+        Headstart dates are placeholders until you set the expected credit date. Toggling Credited moves the same credit between Planned and Posted.
       </Hint>
     </Panel>
   );

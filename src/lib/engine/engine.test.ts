@@ -99,7 +99,7 @@ describe('parity with the original dashboard (Alaska, engine is program-agnostic
 
   it('matches the summary card', () => {
     expect(fmt(s.totals.posted)).toBe(25873);
-    expect(fmt(s.totals.planned)).toBe(48618);
+    expect(fmt(s.totals.planned + s.totals.potential)).toBe(48618);
     expect(fmt(s.totals.forecast)).toBe(74491);
     expect(fmt(s.actualGap)).toBe(109127);
     expect(fmt(s.forecastGap)).toBe(60509);
@@ -123,6 +123,19 @@ describe('cancelled entries', () => {
     const entries = [...KGM_ENTRIES, cancelled];
     expect(totals(entries, 'DL')).toEqual(totals(KGM_ENTRIES, 'DL'));
     expect(chartSeries(entries, 'DL')).toEqual(chartSeries(KGM_ENTRIES, 'DL'));
+  });
+});
+
+describe('totals by state', () => {
+  it('reports Planned and Potential separately; forecast sums all four', () => {
+    const base = { ...KGM_ENTRIES[0], program: 'DL' as const, category: 'Flights' as const, override: null, rate: 1 };
+    const entries: Entry[] = [
+      { ...base, id: 'a', state: 'Posted', amount: 100 },
+      { ...base, id: 'b', state: 'Pending', amount: 20 },
+      { ...base, id: 'c', state: 'Planned', amount: 3 },
+      { ...base, id: 'd', state: 'Potential', amount: 4000 },
+    ];
+    expect(totals(entries, 'DL')).toEqual({ posted: 100, pending: 20, planned: 3, potential: 4000, forecast: 4123 });
   });
 });
 

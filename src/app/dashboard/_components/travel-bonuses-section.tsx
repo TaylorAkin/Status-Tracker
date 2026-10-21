@@ -41,11 +41,11 @@ export function TravelBonusesSection() {
               <h3 className="text-sm font-semibold text-brand">{type.title}</h3>
               <div className="my-4 grid grid-cols-2 gap-3">
                 <div>
-                  <small className="text-[11px] text-muted">Actual {unit}</small>
+                  <small className="text-[11px] text-muted">Posted {unit}</small>
                   <strong className="mt-1 block text-2xl text-brand">{fmt(posted)}</strong>
                 </div>
                 <div>
-                  <small className="text-[11px] text-muted">Total forecast {unit}</small>
+                  <small className="text-[11px] text-muted">Forecast {unit}</small>
                   <strong className="mt-1 block text-2xl text-brand">{fmt(forecast)}</strong>
                 </div>
               </div>
@@ -94,7 +94,7 @@ export function TravelBonusesSection() {
         })}
       </div>
       <Hint>
-        Enter the bonus MQDs from your offer or account. Use the qualifying activity date, keep expected earnings projected, and mark them credited
+        Enter the bonus MQDs from your offer or account. Use the qualifying activity date, keep expected earnings Planned, and mark them credited
         when they post.
       </Hint>
     </Panel>

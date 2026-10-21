@@ -10,7 +10,7 @@ export const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'Jun
 export const MONTH_SHORT = MONTH_NAMES.map((m) => m.slice(0, 3));
 
 export function stateLabel(state: EntryState): string {
-  return state === 'Planned' ? 'Projected' : state;
+  return state;
 }
 
 /** "Delta SkyMiles® Reserve American Express Card" → "Delta SkyMiles® Reserve". */

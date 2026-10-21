@@ -18,11 +18,11 @@ export function Breakdown() {
             <InfoTip id="breakdown" />
           </>
         }
-        sub={`Actual / total forecast ${unit}`}
+        sub={`Posted / forecast ${unit}`}
       />
       <div className="grid grid-cols-[1fr_85px_85px] border-b border-line pb-3 text-[11px] uppercase text-muted">
         <span>Category</span>
-        <span className="text-right">Actual</span>
+        <span className="text-right">Posted</span>
         <span className="text-right">Forecast</span>
       </div>
       {breakdownLabels('DL').map((label) => {
@@ -62,7 +62,7 @@ export function EarningMix() {
             <InfoTip id="mix" />
           </>
         }
-        sub="Your posted and projected MQDs are the starting point. Split the remaining gap between flights and card spend."
+        sub="Your forecast is the starting point. Split the remaining gap between flights and card spend."
       />
       <div className="grid items-start gap-8 md:grid-cols-[1.35fr_1fr]">
         <div>

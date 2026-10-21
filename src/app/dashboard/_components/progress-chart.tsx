@@ -29,7 +29,7 @@ export function ProgressChart() {
       <PanelHead
         title={
           <>
-            {data.tracker.statusYear} projected totals
+            {data.tracker.statusYear} progress
             <InfoTip id="chart.lines" />
           </>
         }
@@ -94,7 +94,7 @@ export function ProgressChart() {
         </svg>
       </div>
       <p className="mt-2 text-xs text-muted">
-        Month-end totals · Posted: <strong className="text-foreground">{fmt(last.actual)}</strong> · Total forecast:{' '}
+        Month-end totals · Posted: <strong className="text-foreground">{fmt(last.actual)}</strong> · Forecast:{' '}
         <strong className="text-foreground">{fmt(last.forecast)}</strong> {unit}
       </p>
       <div className="mt-3 flex flex-wrap justify-between gap-2 text-xs text-muted">

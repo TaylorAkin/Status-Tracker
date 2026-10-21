@@ -11,8 +11,9 @@ export function totals(entries: Entry[], program: ProgramCode, category?: Catego
   const rows = entries.filter((e) => e.program === program && (!category || e.category === category) && e.state !== 'Cancelled');
   const posted = sumCredit(rows.filter((e) => e.state === 'Posted'));
   const pending = sumCredit(rows.filter((e) => e.state === 'Pending'));
-  const planned = sumCredit(rows.filter((e) => e.state === 'Planned' || e.state === 'Potential'));
-  return { posted, pending, planned, forecast: posted + pending + planned };
+  const planned = sumCredit(rows.filter((e) => e.state === 'Planned'));
+  const potential = sumCredit(rows.filter((e) => e.state === 'Potential'));
+  return { posted, pending, planned, potential, forecast: posted + pending + planned + potential };
 }
 
 /** Months remaining in the status year as of `asOf` (the current month counts as remaining). */

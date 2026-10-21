@@ -88,7 +88,7 @@ export function FlightsSection() {
       </PanelHead>
 
       <p className="mb-4 rounded-lg border border-line bg-[#f9eef1]/50 px-4 py-3 text-xs leading-relaxed">
-        Actual <strong className="text-brand">{fmt(t.posted)}</strong> · Forecast <strong className="text-brand">{fmt(t.forecast)}</strong> {unit} ·{' '}
+        Posted <strong className="text-brand">{fmt(t.posted)}</strong> · Forecast <strong className="text-brand">{fmt(t.forecast)}</strong> {unit} ·{' '}
         {awaiting} awaiting credit
       </p>
 
@@ -108,7 +108,7 @@ export function FlightsSection() {
         )}
       </div>
       <Hint>
-        Potential flights stay in the forecast. Booked moves a flight to Projected; Credited moves its MQDs to actual. Use Edit to reconcile the exact
+        Potential flights stay in the forecast. Booked moves a flight to Planned; Credited moves its MQDs to Posted. Use Edit to reconcile the exact
         credit and activity date.
       </Hint>
     </Panel>
@@ -223,14 +223,14 @@ function FlightCard({ entry: e }: { entry: Entry }) {
           label="Booked"
           checked={booked}
           disabled={posted || cancelled}
-          onChange={(on) => setState(e.id, on ? 'Planned' : 'Potential', on ? 'Flight booked and moved to projected.' : 'Flight marked potential.')}
+          onChange={(on) => setState(e.id, on ? 'Planned' : 'Potential', on ? 'Flight booked and moved to Planned.' : 'Flight moved to Potential.')}
         />
         <Switch
           size="sm"
           label="Credited"
           checked={posted}
           disabled={cancelled}
-          onChange={(on) => setState(e.id, on ? 'Posted' : 'Planned', on ? 'Flight moved to actual MQDs.' : 'Flight returned to forecast.')}
+          onChange={(on) => setState(e.id, on ? 'Posted' : 'Planned', on ? 'Flight moved to Posted.' : 'Flight returned to forecast.')}
         />
       </div>
       <div className="flex shrink-0 flex-col items-start gap-1.5">

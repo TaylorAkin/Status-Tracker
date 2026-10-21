@@ -28,7 +28,7 @@ export function MonthlySpendSection() {
         sub="Plan all twelve months for each card. Save edits together and mark each month credited when its MQDs post."
       />
       <p className="mb-5 rounded-lg border border-line px-4 py-3 text-xs text-muted">
-        {data.tracker.statusYear} saved card earnings: {precise(actual)} actual / {precise(forecast)} total forecast {unit}.
+        {data.tracker.statusYear} saved card earnings: {precise(actual)} posted / {precise(forecast)} forecast {unit}.
       </p>
       {cards.length ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -174,7 +174,7 @@ function SpendCard({ card, tc }: { card: CardInfo; tc: TrackerCardInfo }) {
       </div>
       <div className="mb-2 mt-3 flex flex-wrap justify-between gap-3 text-[11px] text-muted">
         <span>
-          Actual <strong className="tabular-nums text-brand">{precise(actual)}</strong>
+          Posted <strong className="tabular-nums text-brand">{precise(actual)}</strong>
         </span>
         <span>
           Forecast <strong className="tabular-nums text-brand">{precise(forecast)}</strong> {unit}

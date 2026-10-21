@@ -30,7 +30,7 @@ export const TIPS = {
   },
   'summary.forecast': {
     title: 'Total forecast',
-    body: 'Posted MQDs plus everything still expected: pending, projected, and potential entries. It is where you would finish the year if your plans happen.',
+    body: 'Posted MQDs plus everything still expected: Pending, Planned, and Potential entries. It is where you would finish the year if your plans happen.',
   },
   'summary.gap': {
     title: 'Actual and forecast gap',
@@ -50,7 +50,7 @@ export const TIPS = {
   },
   breakdown: {
     title: 'Where earnings come from',
-    body: 'Your MQDs by source. Actual counts posted entries only. Forecast adds pending, projected, and potential entries.',
+    body: 'Your MQDs by source. Posted counts what Delta has credited. Forecast adds Pending, Planned, and Potential entries.',
   },
   mix: {
     title: 'Earning mix',
@@ -58,7 +58,7 @@ export const TIPS = {
   },
   'flights.states': {
     title: 'Flight states',
-    body: 'Potential: an idea, not booked yet. Booked moves a flight to Projected. Credited moves its MQDs to posted once Delta credits them. Every state except Cancelled counts in the forecast.',
+    body: 'Potential: an idea, not booked yet. Switch Booked on to move a flight to Planned. Switch Credited on to move it to Posted once Delta credits it. Every state except Cancelled counts in the forecast.',
   },
   headstarts: {
     title: 'MQD Headstarts',
@@ -74,7 +74,7 @@ export const TIPS = {
   },
   'ledger.states': {
     title: 'Activity states',
-    body: 'Potential: not booked yet. Projected: booked or expected. Pending: done, waiting for Delta to post it. Posted: credited to your account. Card excluded: from a card you’re considering but haven’t included. A ≈ next to the MQDs means the number is calculated, not entered from Delta.',
+    body: 'Potential: not booked yet. Planned: booked or expected. Pending: done, waiting for Delta to post it. Posted: credited to your account. Card excluded: from a card you’re considering but haven’t included. A ≈ next to the MQDs means the number is calculated, not entered from Delta.',
   },
   'entry.method': {
     title: 'Calculation method',
@@ -165,7 +165,7 @@ export const TOURS: Record<TourKey, Tour> = {
       {
         target: 'entry.state',
         title: 'Earning state',
-        body: 'Projected: booked, not flown. Pending: flown, waiting on Delta. Posted: credited. On each flight card, switch Credited on when the MQDs post, and switch Booked off for a trip you haven’t booked yet (Potential). Now add your first flight.',
+        body: 'Planned: booked, not flown. Pending: flown, waiting on Delta. Posted: credited. On each flight card, switch Credited on when the MQDs post, and switch Booked off for a trip you haven’t booked yet (Potential). Now add your first flight.',
       },
     ],
   },

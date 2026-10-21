@@ -64,7 +64,7 @@ export function FlightMap() {
     <Panel>
       <PanelHead
         title={`${data.tracker.statusYear} Flight Map`}
-        sub="Potential and projected routes become solid when their MQDs credit to your account."
+        sub="Potential and planned routes become solid when their MQDs post to your account."
       >
         <Switch label="IATA labels" checked={showIata} onChange={setShowIata} />
         <button className={buttonClass.secondary} onClick={() => setWorldView(false)}>
@@ -77,11 +77,11 @@ export function FlightMap() {
       <div className="mb-4 flex flex-wrap gap-5 text-[11px] text-muted">
         <span className="inline-flex items-center gap-2">
           <i className="w-6 border-t-2 border-dashed border-[#62757c]" />
-          Potential / projected / pending
+          Potential / planned / pending
         </span>
         <span className="inline-flex items-center gap-2">
           <i className="w-6 border-t-2 border-[#62757c]" />
-          Credited
+          Posted
         </span>
       </div>
 
@@ -102,7 +102,7 @@ export function FlightMap() {
               const offset = (corridor.indexOf(l) - (corridor.length - 1) / 2) * 8 * scale * (l.from < l.to ? 1 : -1);
               const d = routePath(l.points, offset);
               const isSel = l.entry.id === selected;
-              const label = `${l.from} to ${l.to} · ${l.entry.description} · ${l.entry.date} · ${l.entry.state === 'Posted' ? 'Credited' : stateLabel(l.entry.state)}`;
+              const label = `${l.from} to ${l.to} · ${l.entry.description} · ${l.entry.date} · ${stateLabel(l.entry.state)}`;
               return (
                 <g key={`${l.entry.id}-${i}`}>
                   <path
@@ -179,7 +179,7 @@ export function FlightMap() {
         {sel ? (
           <>
             <strong className="block text-foreground">{flightName(sel)}</strong>
-            {sel.description} · {sel.date} · {sel.state === 'Posted' ? 'Credited' : stateLabel(sel.state)} · {fmt(credit(sel))} {unit}
+            {sel.description} · {sel.date} · {stateLabel(sel.state)} · {fmt(credit(sel))} {unit}
           </>
         ) : (
           'Select a route to see its flight details.'
