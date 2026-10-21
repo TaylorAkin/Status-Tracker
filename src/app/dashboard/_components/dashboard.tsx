@@ -14,7 +14,7 @@ import { MonthlySpendSection } from './monthly-spend-section';
 import { ProgressChart } from './progress-chart';
 import { SettingsDialog } from './settings-dialog';
 import { TripDialog } from './trip-dialog';
-import { SummaryCard } from './summary-card';
+import { StatusCard } from './status-card';
 import { TravelBonusesSection } from './travel-bonuses-section';
 import { useTracker } from './tracker-context';
 
@@ -45,7 +45,7 @@ export function Dashboard({ userEmail }: { userEmail: string }) {
       <ReadingBanner />
 
       <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
-        <SummaryCard />
+        <StatusCard />
         <div className="flex flex-col gap-5">
           <ProgressChart />
           <Breakdown />
