@@ -2,7 +2,7 @@
 
 import type { ComponentProps, ReactNode } from 'react';
 import type { EntryState } from '@/lib/engine';
-import { stateLabel } from '@/lib/format';
+import { STATE_HELP, stateLabel } from '@/lib/format';
 
 export function Panel({ className = '', ...props }: ComponentProps<'section'>) {
   return <section className={`rounded-2xl border border-line bg-surface p-5 shadow-[0_4px_20px_#172c3305] sm:p-6 ${className}`} {...props} />;
@@ -49,6 +49,7 @@ export function StatePill({ state, children }: { state: EntryState; children?: R
   const cancelled = state === 'Cancelled';
   return (
     <span
+      title={`${state}: ${STATE_HELP[state]}`}
       className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface px-2 py-0.5 text-[11px] font-medium ${cancelled ? 'text-muted line-through' : ''}`}
     >
       {!cancelled && <StateSwatch state={state} className="size-2 rounded-full" />}

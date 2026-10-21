@@ -10,6 +10,7 @@ import {
   earningMix,
   flightName,
   flightRouteCodes,
+  goalOutlook,
   goalSummary,
   monthsLeft,
   routeMiles,
@@ -136,6 +137,33 @@ describe('totals by state', () => {
       { ...base, id: 'd', state: 'Potential', amount: 4000 },
     ];
     expect(totals(entries, 'DL')).toEqual({ posted: 100, pending: 20, planned: 3, potential: 4000, forecast: 4123 });
+  });
+});
+
+describe('goalOutlook', () => {
+  const t = (posted: number, pending: number, planned: number, potential: number) => ({
+    posted,
+    pending,
+    planned,
+    potential,
+    forecast: posted + pending + planned + potential,
+  });
+
+  it('is empty with nothing tracked', () => {
+    expect(goalOutlook(t(0, 0, 0, 0), 15000, DL_TIERS)).toEqual({ kind: 'empty' });
+  });
+
+  it('is reached once posted MQDs meet the goal', () => {
+    expect(goalOutlook(t(15000, 0, 0, 500), 15000, DL_TIERS)).toEqual({ kind: 'reached' });
+  });
+
+  it('counts posted, pending and planned as committed, without potential', () => {
+    expect(goalOutlook(t(9000, 1000, 5000, 0), 15000, DL_TIERS)).toEqual({ kind: 'planned', toPost: 6000 });
+    expect(goalOutlook(t(4000, 0, 6000, 7000), 15000, DL_TIERS)).toEqual({ kind: 'short', tier: DL_TIERS[1], short: 5000, potential: 7000 });
+  });
+
+  it('reports no tier when committed MQDs reach none', () => {
+    expect(goalOutlook(t(1000, 0, 0, 2000), 15000, DL_TIERS)).toEqual({ kind: 'short', tier: undefined, short: 14000, potential: 2000 });
   });
 });
 

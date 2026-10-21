@@ -1,6 +1,6 @@
 'use client';
 
-import { goalSummary, progressScale, tierMarkState, tierProgress, type GoalSummary, type Tier } from '@/lib/engine';
+import { goalOutlook, goalSummary, progressScale, tierMarkState, type GoalSummary, type Tier } from '@/lib/engine';
 import { fmt, percent } from '@/lib/format';
 import { POTENTIAL_FILL, STATE_COLORS, StateSwatch } from '@/components/ui';
 import { InfoTip } from './help/info-tip';
@@ -8,6 +8,7 @@ import { useTracker } from './tracker-context';
 
 /** Bar and legend order: what's in your account first, then what's still to come. */
 const STATES = ['Posted', 'Pending', 'Planned', 'Potential'] as const;
+const STATE_TIPS = { Posted: 'state.posted', Pending: 'state.pending', Planned: 'state.planned', Potential: 'state.potential' } as const;
 
 export function StatusCard() {
   const { data, activeEntries, unit } = useTracker();
@@ -41,62 +42,66 @@ export function StatusCard() {
 
         <StatusBar tiers={tiers} values={values} target={tracker.target} goalName={goal?.name} unit={unit} />
 
-        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
+        <dl data-help="summary.states" className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
           {STATES.map((state) => (
             <div key={state}>
               <dt className="flex items-center gap-1.5 text-xs text-muted">
                 <StateSwatch state={state} />
-                {state}
-                {state === 'Posted' && <InfoTip id="summary.posted" />}
+                <InfoTip id={STATE_TIPS[state]}>{state}</InfoTip>
               </dt>
               <dd className="mt-0.5 text-[22px] font-semibold tabular-nums text-brand">{fmt(values[state])}</dd>
             </div>
           ))}
         </dl>
         <p className="mt-3 border-t border-line pt-3 text-xs text-muted">
-          Forecast <strong className="text-foreground">{fmt(t.forecast)}</strong> {unit} ({percent(s.forecastPercent)} of goal) = all four states.
-          <InfoTip id="summary.forecast" /> Earning window: Jan 1 – Dec 31, {tracker.statusYear}.
+          <InfoTip id="summary.forecast">Forecast</InfoTip> <strong className="text-foreground">{fmt(t.forecast)}</strong>{' '}
+          {`${unit} (${percent(s.forecastPercent)} of goal) = all four states. Earning window: Jan 1 – Dec 31, ${tracker.statusYear}.`}
         </p>
       </div>
     </article>
   );
 }
 
-/** One sentence: where the forecast lands and what's left to reach the goal. */
+/** One sentence on where committed MQDs land, then what Potential trips would add. */
 function Verdict({ s, tiers, goalName, unit }: { s: GoalSummary; tiers: Tier[]; goalName: string; unit: string }) {
-  const t = s.totals;
-  const reached = tierProgress(tiers, t.posted, t.forecast);
-  if (t.forecast === 0) return <>Add your flights and cards to see where your year lands.</>;
-  if (s.actualGap === 0)
-    return (
-      <>
-        You&apos;ve reached <strong className="font-semibold">{goalName}</strong>. Everything that counts has posted.
-      </>
-    );
-  if (s.forecastGap === 0)
-    return (
-      <>
-        Your plans reach <strong className="font-semibold">{goalName}</strong>.{' '}
-        <span className="text-muted">
-          {fmt(s.actualGap)} {unit} still need to post.
-        </span>
-      </>
-    );
-  return (
-    <>
-      {reached.forecast ? (
+  const o = goalOutlook(s.totals, s.target, tiers);
+  const potential = s.totals.potential;
+  const b = (text: string) => <strong className="font-semibold">{text}</strong>;
+  const potentialTerm = <InfoTip id="state.potential">Potential</InfoTip>;
+
+  switch (o.kind) {
+    case 'empty':
+      return <>Add your flights and cards to see where your year lands.</>;
+    case 'reached':
+      return <>You&apos;ve reached {b(goalName)}. Everything that counts has posted.</>;
+    case 'planned':
+      return (
         <>
-          On track for <strong className="font-semibold">{reached.forecast.name}</strong>.{' '}
+          You&apos;re on track for {b(goalName)}
+          {potential ? <> without any {potentialTerm} trips</> : null}.{' '}
+          <span className="text-muted">
+            {fmt(o.toPost)} {unit} still need to post.
+          </span>
         </>
-      ) : (
-        <>Not on track for a tier yet. </>
-      )}
-      <span className="text-accent">
-        {fmt(s.forecastGap)} {unit} short
-      </span>{' '}
-      of {goalName}.
-    </>
-  );
+      );
+    case 'short':
+      return (
+        <>
+          {potential ? <>Not counting {potentialTerm} trips, you&apos;re </> : <>You&apos;re </>}
+          {o.tier ? <>on track for {b(o.tier.name)}, </> : <>not on track for a tier yet, </>}
+          <span className="text-accent">
+            {fmt(o.short)} {unit} short
+          </span>{' '}
+          of {goalName}.
+          {potential > 0 && (
+            <span className="text-muted">
+              {' '}
+              {potential >= o.short ? 'Your potential trips would get you there.' : `Your potential trips would cover ${fmt(potential)} of that.`}
+            </span>
+          )}
+        </>
+      );
+  }
 }
 
 function PacePill({ s, unit }: { s: GoalSummary; unit: string }) {

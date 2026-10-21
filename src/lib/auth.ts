@@ -11,8 +11,7 @@ import * as schema from './db/schema';
 // deployments work without setting BETTER_AUTH_URL per environment.
 const https = (host?: string) => (host ? `https://${host}` : undefined);
 const { VERCEL_ENV, VERCEL_PROJECT_PRODUCTION_URL, VERCEL_BRANCH_URL, VERCEL_URL } = process.env;
-const deploymentOrigin =
-  VERCEL_ENV === 'production' ? https(VERCEL_PROJECT_PRODUCTION_URL) : https(VERCEL_BRANCH_URL) || https(VERCEL_URL);
+const deploymentOrigin = VERCEL_ENV === 'production' ? https(VERCEL_PROJECT_PRODUCTION_URL) : https(VERCEL_BRANCH_URL) || https(VERCEL_URL);
 const vercelOrigins = [VERCEL_PROJECT_PRODUCTION_URL, VERCEL_BRANCH_URL, VERCEL_URL].map(https).filter((o): o is string => !!o);
 
 export const auth = betterAuth({

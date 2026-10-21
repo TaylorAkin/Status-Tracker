@@ -1,3 +1,4 @@
+import { FORECAST_HELP, STATE_HELP } from '@/lib/format';
 import type { TourKey } from '@/lib/tracker/types';
 import type { SourceTab } from '../tracker-context';
 
@@ -27,14 +28,11 @@ export const TIPS = {
     title: 'Your goal',
     body: 'The MQD target you are working toward this year, usually a Medallion tier threshold. Change it in Settings.',
   },
-  'summary.posted': {
-    title: 'Posted MQDs',
-    body: 'MQDs Delta has already credited to your SkyMiles account. Only posted MQDs count toward status today. Mark entries credited when they appear in your account.',
-  },
-  'summary.forecast': {
-    title: 'Total forecast',
-    body: 'Posted MQDs plus everything still expected: Pending, Planned, and Potential entries. It is where you would finish the year if your plans happen.',
-  },
+  'state.posted': { title: 'Posted', body: STATE_HELP.Posted },
+  'state.pending': { title: 'Pending', body: STATE_HELP.Pending },
+  'state.planned': { title: 'Planned', body: STATE_HELP.Planned },
+  'state.potential': { title: 'Potential', body: STATE_HELP.Potential },
+  'summary.forecast': { title: 'Forecast', body: FORECAST_HELP },
   'summary.pace': {
     title: 'Monthly pace',
     body: 'What’s left to post before your goal, spread evenly across the months left. Months count from the as-of date in Settings.',
@@ -49,7 +47,7 @@ export const TIPS = {
   },
   'flights.states': {
     title: 'Flight states',
-    body: 'Potential: an idea, not booked yet. Switch Booked on to move a flight to Planned. Switch Credited on to move it to Posted once Delta credits it. Every state except Cancelled counts in the forecast. Use Edit to enter the exact MQDs Delta posts.',
+    body: 'Potential: considering, not booked yet. Switch Booked on to move a flight to Planned. Switch Credited on to move it to Posted once Delta credits it. Every state except Cancelled counts in the forecast. Use Edit to enter the exact MQDs Delta posts.',
   },
   headstarts: {
     title: 'MQD Headstarts',
@@ -65,7 +63,7 @@ export const TIPS = {
   },
   'ledger.states': {
     title: 'Activity states',
-    body: 'Potential: not booked yet. Planned: booked or expected. Pending: done, waiting for Delta to post it. Posted: credited to your account. Card excluded: from a card you’re considering but haven’t included. A ≈ next to the MQDs means the number is calculated, not entered from Delta.',
+    body: 'Potential: considering, not booked. Planned: booked or scheduled. Pending: done, waiting on Delta. Posted: in your SkyMiles account. Card excluded: from a card you’re considering but haven’t included. A ≈ next to the MQDs means the number is calculated, not entered from Delta.',
   },
   'entry.method': {
     title: 'Calculation method',
@@ -158,7 +156,7 @@ export const TOURS: Record<TourKey, Tour> = {
       {
         target: 'entry.state',
         title: 'Earning state',
-        body: 'Planned: booked, not flown. Pending: flown, waiting on Delta. Posted: credited. On each flight card, switch Credited on when the MQDs post, and switch Booked off for a trip you haven’t booked yet (Potential). Now add your first flight.',
+        body: 'Planned: booked, not flown. Pending: flown, waiting on Delta. Posted: credited. A trip you’re only considering is Potential: pick it in Add flight, or switch Booked off on its flight card. Switch Credited on when the MQDs post. Now add your first flight.',
       },
     ],
   },
@@ -168,12 +166,17 @@ export const TOURS: Record<TourKey, Tour> = {
       {
         target: 'summary',
         title: 'Your status at a glance',
-        body: 'Where your year lands if your plans happen, and how far that is from your goal.',
+        body: 'Where your year lands with what’s booked, how far that is from your goal, and what your Potential trips would add.',
       },
       {
         target: 'summary.bar',
         title: 'One bar, four states',
         body: 'Dark is Posted, then Pending, Planned, and hatched Potential. The marks are Medallion tiers; red is your goal. A ✓ means posted MQDs already reach that tier.',
+      },
+      {
+        target: 'summary.states',
+        title: 'What the states mean',
+        body: 'Posted: in your SkyMiles account, and the only MQDs that count today. Pending: done, waiting on Delta. Planned: booked or scheduled. Potential: trips you’re considering. Forecast adds all four. Select any of these words on the page to see its meaning again.',
       },
       {
         target: 'summary.gap',
