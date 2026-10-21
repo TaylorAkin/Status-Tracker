@@ -3,7 +3,7 @@
 import { useState, useSyncExternalStore } from 'react';
 import { credit, flightName, flightRouteCodes, groupTrips, totals, type Entry } from '@/lib/engine';
 import { fmt, stateLabel } from '@/lib/format';
-import { buttonClass, Hint, inlineSelectClass, Panel, PanelHead, Switch } from '@/components/ui';
+import { buttonClass, EmptyState, Hint, inlineSelectClass, Panel, PanelHead, Switch } from '@/components/ui';
 import * as actions from '../actions';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
@@ -102,9 +102,9 @@ export function FlightsSection() {
             )
           )
         ) : (
-          <div className="col-span-full rounded-lg border border-dashed border-line p-6 text-center text-sm text-muted">
+          <EmptyState className="col-span-full">
             {flights.length ? 'No flights match this view.' : 'No flights entered yet. Add your planned trips to start tracking their MQDs.'}
-          </div>
+          </EmptyState>
         )}
       </div>
       <Hint>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { credit, type Entry } from '@/lib/engine';
 import { MONTH_NAMES, MONTH_SHORT, precise } from '@/lib/format';
 import type { CardInfo, TrackerCardInfo } from '@/lib/tracker/types';
-import { buttonClass, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
+import { buttonClass, EmptyState, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
 import * as actions from '../actions';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
@@ -37,9 +37,7 @@ export function MonthlySpendSection() {
           ))}
         </div>
       ) : (
-        <p className="rounded-lg border border-dashed border-line p-6 text-center text-sm text-muted">
-          Choose your Delta cards in Settings to plan monthly spend.
-        </p>
+        <EmptyState>Choose your Delta cards in Settings to plan monthly spend.</EmptyState>
       )}
       <Hint>
         Monthly entries feed the activity log, progress card, tiers, and chart. Eligible spend excludes returns and ineligible transactions. Enter the
@@ -108,7 +106,7 @@ function SpendCard({ card, tc }: { card: CardInfo; tc: TrackerCardInfo }) {
         e.preventDefault();
         save(Object.keys(drafts).map(Number));
       }}
-      className={`rounded-xl border border-[#e6c4cb] border-t-[3px] p-5 ${disabled ? 'bg-[#f6f7f6]' : 'bg-[linear-gradient(135deg,#fff_12%,#f4f3f2_62%,#edf1f7)]'}`}
+      className={`rounded-xl border border-line border-t-[3px] border-t-[#e6c4cb] p-5 ${disabled ? 'bg-[#f6f7f6]' : 'bg-[linear-gradient(135deg,#fff_12%,#f4f3f2_62%,#edf1f7)]'}`}
     >
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-[13px] font-semibold leading-snug text-brand">{card.name}</h3>

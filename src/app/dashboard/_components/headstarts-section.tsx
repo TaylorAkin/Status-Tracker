@@ -3,7 +3,7 @@
 import { credit } from '@/lib/engine';
 import { fmt } from '@/lib/format';
 import { HEADSTART_METHOD } from '@/lib/tracker/methods';
-import { buttonClass, Hint, inputClass, labelClass, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
+import { buttonClass, EmptyState, Hint, InnerCard, inputClass, labelClass, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
 import * as actions from '../actions';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
@@ -47,10 +47,7 @@ export function HeadstartsSection() {
             const e = data.entries.find((x) => x.cardKey === card.key && x.method === HEADSTART_METHOD);
             const excluded = !tc.included;
             return (
-              <div
-                key={card.key}
-                className={`rounded-xl border border-[#e6c4cb] border-t-[3px] p-5 ${excluded ? 'bg-[#f6f7f6]' : 'bg-[linear-gradient(135deg,#fff_12%,#f4f3f2_62%,#edf1f7)]'}`}
-              >
+              <InnerCard key={card.key} muted={excluded}>
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="text-[13px] font-semibold leading-snug text-brand">{card.name}</h3>
                   {e ? <StatePill state={excluded ? 'Cancelled' : e.state}>{excluded ? 'Not added' : undefined}</StatePill> : null}
@@ -120,18 +117,18 @@ export function HeadstartsSection() {
                     </button>
                   </>
                 )}
-              </div>
+              </InnerCard>
             );
           })}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-line p-6 text-center text-sm text-muted">
+        <EmptyState>
           No Delta cards selected yet.{' '}
           <button className={buttonClass.link} onClick={() => setSettingsOpen(true)}>
             Choose the cards you hold
           </button>{' '}
           to add their Headstarts and monthly spend.
-        </div>
+        </EmptyState>
       )}
       <Hint>
         Headstart dates are placeholders until you set the expected credit date. Toggling Credited moves the same credit between Planned and Posted.
