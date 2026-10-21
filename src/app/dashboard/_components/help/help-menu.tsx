@@ -8,7 +8,7 @@ import { useTour } from './tour';
 import { useAnchoredPopover } from './use-anchored-popover';
 
 /** Header button listing the guided tours, so any of them can be replayed. */
-export function HelpMenu() {
+export function HelpMenu({ className = buttonClass.secondary }: { className?: string }) {
   const { start } = useTour();
   const menuId = useId();
   const headingId = useId();
@@ -16,7 +16,7 @@ export function HelpMenu() {
 
   return (
     <>
-      <button ref={anchorRef} type="button" popoverTarget={menuId} className={buttonClass.secondary} data-help="help-menu">
+      <button ref={anchorRef} type="button" popoverTarget={menuId} className={className} data-help="help-menu">
         {HELP_MENU.button}
       </button>
       <div

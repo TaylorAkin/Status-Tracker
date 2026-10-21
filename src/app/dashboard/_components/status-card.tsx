@@ -20,7 +20,7 @@ export function StatusCard() {
   const values = { Posted: t.posted, Pending: t.pending, Planned: t.planned, Potential: t.potential };
 
   return (
-    <article data-help="summary" className="overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_4px_20px_#172c3305]">
+    <article data-help="summary" className="overflow-hidden rounded-[18px] border border-white/60 bg-surface shadow-[0_24px_60px_rgba(16,40,80,.18)]">
       <div className="flex flex-wrap items-center justify-between gap-2 bg-[linear-gradient(120deg,#002750,#003366_55%,#1b4f86)] px-5 py-3.5 text-white sm:px-6">
         <h2 className="text-lg font-semibold tracking-tight">
           {tracker.statusYear} Medallion status

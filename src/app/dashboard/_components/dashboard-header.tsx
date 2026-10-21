@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { buttonClass } from '@/components/ui';
+import { Logo } from '@/components/logo';
 import { SignOutButton } from '@/components/sign-out-button';
 import { RENTAL_METHOD, STAYS_METHOD } from '@/lib/tracker/methods';
 import { HelpMenu } from './help/help-menu';
@@ -48,52 +48,65 @@ function useCurrentSection() {
   return current;
 }
 
+/** Header buttons on the sky: outlined white, and solid white for the main action, as on the front page. */
+const SKY_BUTTON =
+  'inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium ring-1 ring-inset focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+const skyButton = {
+  outline: `${SKY_BUTTON} bg-white/10 text-white ring-white/40 hover:bg-white/20`,
+  solid: `${SKY_BUTTON} bg-white font-semibold text-navy ring-white hover:bg-white/90`,
+};
+
 export function DashboardHeader({ userEmail }: { userEmail: string }) {
   const { data, setSettingsOpen } = useTracker();
   const current = useCurrentSection();
 
   return (
-    // On phones only the section nav sticks (the wrapper becomes `contents`), so the title and buttons scroll away.
-    <header className="z-30 mb-6 max-sm:contents sm:sticky sm:top-0 sm:-mx-7 sm:border-b sm:border-line sm:bg-background/90 sm:px-7 sm:backdrop-blur">
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3">
-        <div className="flex min-w-0 items-baseline gap-3">
-          <h1 className="text-lg font-semibold tracking-tight">Delta Status Tracker</h1>
-          <span className="text-[11px] font-bold uppercase tracking-[2px] text-accent">{data.tracker.statusYear}</span>
+    // On phones only the section nav sticks (both wrappers become `contents`), so the logo and buttons scroll away.
+    <header className="z-30 text-white max-sm:contents sm:sticky sm:top-0 sm:bg-sky-deep sm:shadow-[0_1px_0_var(--sky-deep)]">
+      <div className="mx-auto w-full max-w-[1200px] max-sm:contents sm:px-7">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pb-2 pt-4 max-sm:px-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <Logo tone="light" />
+            <span aria-hidden className="h-5 w-px bg-white/30" />
+            <h1 className="text-sm font-medium text-white/85">
+              Delta Medallion <span className="font-semibold text-white">{data.tracker.statusYear}</span>
+            </h1>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <HelpMenu className={skyButton.outline} />
+            <button className={skyButton.outline} data-help="settings" onClick={() => setSettingsOpen(true)}>
+              Settings
+            </button>
+            <AddMenu />
+            <PopoverMenu
+              button={<span aria-hidden>{userEmail.slice(0, 1).toUpperCase()}</span>}
+              buttonClassName={`${skyButton.outline} w-10 px-0 font-semibold`}
+              label="Account"
+              heading={<span className="block truncate">{userEmail}</span>}
+            >
+              <a href="/dashboard/export" download className={menuItemClass}>
+                Export backup
+              </a>
+              <SignOutButton className={menuItemClass} />
+            </PopoverMenu>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <HelpMenu />
-          <button className={buttonClass.secondary} data-help="settings" onClick={() => setSettingsOpen(true)}>
-            Settings
-          </button>
-          <AddMenu />
-          <PopoverMenu
-            button={<span aria-hidden>{userEmail.slice(0, 1).toUpperCase()}</span>}
-            buttonClassName={`${buttonClass.secondary} w-10 px-0 font-semibold`}
-            label="Account"
-            heading={<span className="block truncate">{userEmail}</span>}
-          >
-            <a href="/dashboard/export" download className={menuItemClass}>
-              Export backup
+        <nav
+          aria-label="Dashboard sections"
+          className="flex gap-6 overflow-x-auto text-sm max-sm:sticky max-sm:top-0 max-sm:z-30 max-sm:bg-sky-deep max-sm:px-4 max-sm:pt-2.5"
+        >
+          {SECTIONS.map((s) => (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              aria-current={current === s.id ? 'location' : undefined}
+              className={`whitespace-nowrap border-b-2 pb-2.5 pt-1 focus-visible:outline-2 focus-visible:outline-white ${current === s.id ? 'border-white font-semibold text-white' : 'border-transparent text-white/75 hover:text-white'}`}
+            >
+              {s.label}
             </a>
-            <SignOutButton className={menuItemClass} />
-          </PopoverMenu>
-        </div>
+          ))}
+        </nav>
       </div>
-      <nav
-        aria-label="Dashboard sections"
-        className="-mb-px flex gap-5 overflow-x-auto text-sm max-sm:sticky max-sm:top-0 max-sm:z-30 max-sm:-mx-4 max-sm:mb-6 max-sm:border-b max-sm:border-line max-sm:bg-background/95 max-sm:px-4 max-sm:pt-2.5 max-sm:backdrop-blur"
-      >
-        {SECTIONS.map((s) => (
-          <a
-            key={s.id}
-            href={`#${s.id}`}
-            aria-current={current === s.id ? 'location' : undefined}
-            className={`whitespace-nowrap border-b-2 pb-2.5 ${current === s.id ? 'border-accent font-semibold text-foreground' : 'border-transparent text-muted hover:text-foreground'}`}
-          >
-            {s.label}
-          </a>
-        ))}
-      </nav>
     </header>
   );
 }
@@ -116,7 +129,7 @@ function AddMenu() {
           + Add <span aria-hidden>▾</span>
         </>
       }
-      buttonClassName={buttonClass.dark}
+      buttonClassName={skyButton.solid}
       help="add-earning"
       heading="Add an earning"
     >

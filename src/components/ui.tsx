@@ -5,7 +5,9 @@ import type { EntryState } from '@/lib/engine';
 import { STATE_HELP, stateLabel } from '@/lib/format';
 
 export function Panel({ className = '', ...props }: ComponentProps<'section'>) {
-  return <section className={`rounded-2xl border border-line bg-surface p-5 shadow-[0_4px_20px_#172c3305] sm:p-6 ${className}`} {...props} />;
+  return (
+    <section className={`rounded-[18px] border border-line bg-surface p-5 shadow-[0_18px_50px_rgba(16,40,80,.10)] sm:p-6 ${className}`} {...props} />
+  );
 }
 
 export function PanelHead({ title, sub, children }: { title: ReactNode; sub?: ReactNode; children?: ReactNode }) {
