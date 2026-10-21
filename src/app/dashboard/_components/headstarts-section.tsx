@@ -56,7 +56,7 @@ export function HeadstartsSection() {
                 <strong className="my-3 block text-[28px] text-brand">
                   {fmt(e ? credit(e) : card.headstartAmount!)} <small className="text-[13px] font-normal">{unit}</small>
                 </strong>
-                <div className="space-y-3">
+                <div className="flex flex-col items-start gap-3">
                   {tc.potential && (
                     <Switch
                       label="Include this card in forecast"
