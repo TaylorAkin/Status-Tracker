@@ -13,7 +13,7 @@ export function ReadingBanner() {
   if (active || helpPrompt({ tours: data.tours, entries: data.entries }) !== 'offer-reading') return null;
 
   return (
-    <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-[18px] border border-white/60 bg-surface px-5 py-3.5 text-sm shadow-[0_18px_50px_rgba(16,40,80,.14)]">
       <p>
         <strong>{READING_BANNER.title}</strong> <span className="text-muted">{READING_BANNER.body}</span>
       </p>

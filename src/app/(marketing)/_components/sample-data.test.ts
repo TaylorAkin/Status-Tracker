@@ -6,7 +6,7 @@ describe('front page sample data', () => {
   it('matches the spec: 2027, as of March 1, Gold goal', () => {
     expect(SAMPLE.goalName).toBe('Gold');
     const s = SAMPLE.summary;
-    expect(s.totals).toEqual({ posted: 7840, pending: 720, planned: 2950, forecast: 11510 });
+    expect(s.totals).toEqual({ posted: 7840, pending: 720, planned: 2150, potential: 800, forecast: 11510 });
     expect(s.actualGap).toBe(2160);
     expect(s.forecastGap).toBe(0);
     expect(s.monthsLeft).toBe(10);

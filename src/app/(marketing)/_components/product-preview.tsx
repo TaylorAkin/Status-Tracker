@@ -63,10 +63,11 @@ export function ProductPreview() {
               })}
             </div>
 
-            <div className="mt-4 grid grid-cols-3 gap-2.5">
+            <div className="mt-4 grid grid-cols-4 gap-2.5">
               {(
                 [
-                  ['Projected', t.planned],
+                  ['Potential', t.potential],
+                  ['Planned', t.planned],
                   ['Pending', t.pending],
                   ['Posted', t.posted],
                 ] as const

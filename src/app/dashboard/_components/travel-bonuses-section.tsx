@@ -3,7 +3,7 @@
 import { credit } from '@/lib/engine';
 import { fmt } from '@/lib/format';
 import { RENTAL_METHOD, STAYS_METHOD } from '@/lib/tracker/methods';
-import { buttonClass, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
+import { buttonClass, Hint, InnerCard, Panel, PanelHead, Stat, StatePill, Switch } from '@/components/ui';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
 
@@ -15,11 +15,11 @@ const TYPES = [
 export function TravelBonusesSection() {
   const { data, unit, setState, openEntry } = useTracker();
   return (
-    <Panel>
+    <Panel data-help="travel-bonuses">
       <PanelHead
         title={
           <>
-            Delta Stays &amp; rental car bonus MQDs
+            Delta Stays and rental car bonuses
             <InfoTip id="travel-bonuses" />
           </>
         }
@@ -34,20 +34,11 @@ export function TravelBonusesSection() {
           const posted = active.filter((e) => e.state === 'Posted').reduce((s, e) => s + credit(e), 0);
           const forecast = active.reduce((s, e) => s + credit(e), 0);
           return (
-            <div
-              key={type.method}
-              className="rounded-xl border border-[#e6c4cb] border-t-[3px] bg-[linear-gradient(135deg,#fff_12%,#f4f3f2_62%,#edf1f7)] p-5"
-            >
+            <InnerCard key={type.method}>
               <h3 className="text-sm font-semibold text-brand">{type.title}</h3>
               <div className="my-4 grid grid-cols-2 gap-3">
-                <div>
-                  <small className="text-[11px] text-muted">Actual {unit}</small>
-                  <strong className="mt-1 block text-2xl text-brand">{fmt(posted)}</strong>
-                </div>
-                <div>
-                  <small className="text-[11px] text-muted">Total forecast {unit}</small>
-                  <strong className="mt-1 block text-2xl text-brand">{fmt(forecast)}</strong>
-                </div>
+                <Stat label={`Posted ${unit}`} value={fmt(posted)} />
+                <Stat label={`Forecast ${unit}`} value={fmt(forecast)} />
               </div>
               <button
                 className={buttonClass.primary}
@@ -89,14 +80,10 @@ export function TravelBonusesSection() {
               ) : (
                 <Hint className="mt-4">No bonus MQDs entered yet.</Hint>
               )}
-            </div>
+            </InnerCard>
           );
         })}
       </div>
-      <Hint>
-        Enter the bonus MQDs from your offer or account. Use the qualifying activity date, keep expected earnings projected, and mark them credited
-        when they post.
-      </Hint>
     </Panel>
   );
 }

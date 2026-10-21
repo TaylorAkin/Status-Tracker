@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { buttonClass } from './ui';
 
-export function SignOutButton() {
+export function SignOutButton({ className = buttonClass.secondary }: { className?: string }) {
   const router = useRouter();
   return (
     <button
@@ -13,7 +13,7 @@ export function SignOutButton() {
         router.push('/sign-in');
         router.refresh();
       }}
-      className={buttonClass.secondary}
+      className={className}
     >
       Sign out
     </button>

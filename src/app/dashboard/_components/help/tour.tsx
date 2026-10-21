@@ -34,7 +34,7 @@ const findTarget = (step: TourStep) => document.querySelector<HTMLElement>(`[dat
 const inModalDialog = (el: HTMLElement | null) => !!el?.closest('dialog')?.matches(':modal');
 
 export function TourProvider({ children }: { children: ReactNode }) {
-  const { data, openEntry, closeEntry, markTour } = useTracker();
+  const { data, openEntry, closeEntry, markTour, setSourceTab } = useTracker();
   // A new, empty account starts "Adding your data" straight away. Lazy state runs once (StrictMode can't
   // start it twice) and matches the server render.
   const [run, setRun] = useState<Run | null>(() =>
@@ -120,7 +120,8 @@ export function TourProvider({ children }: { children: ReactNode }) {
     const attempt = () => {
       const el = findTarget(step);
       if (el && (!step.before || inModalDialog(el))) return present(el);
-      if (!step.before) return pass();
+      // A step on another Sources tab waits for that tab to render.
+      if (!step.before && !step.tab) return pass();
       if (performance.now() > deadline) return leave();
       frame = requestAnimationFrame(attempt);
     };
@@ -131,6 +132,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
         openedEntry.current = false;
         closeEntry();
       }
+      if (step.tab) setSourceTab(step.tab);
       if (step.before === 'openEntry' && !inModalDialog(findTarget(step))) {
         waiting.current = true;
         dialogRef.current?.setAttribute('data-waiting', '');

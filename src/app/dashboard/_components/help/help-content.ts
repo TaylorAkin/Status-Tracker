@@ -1,4 +1,6 @@
+import { FORECAST_HELP, STATE_HELP } from '@/lib/format';
 import type { TourKey } from '@/lib/tracker/types';
+import type { SourceTab } from '../tracker-context';
 
 export interface Tip {
   title: string;
@@ -12,6 +14,8 @@ export interface TourStep {
   body: string;
   /** Opens the Add earning dialog before this step, when it isn't open already. */
   before?: 'openEntry';
+  /** Selects this Sources tab before the step, so its target is on the page. */
+  tab?: SourceTab;
 }
 
 export interface Tour {
@@ -24,33 +28,18 @@ export const TIPS = {
     title: 'Your goal',
     body: 'The MQD target you are working toward this year, usually a Medallion tier threshold. Change it in Settings.',
   },
-  'summary.posted': {
-    title: 'Posted MQDs',
-    body: 'MQDs Delta has already credited to your SkyMiles account. Only posted MQDs count toward status today. Mark entries credited when they appear in your account.',
-  },
-  'summary.forecast': {
-    title: 'Total forecast',
-    body: 'Posted MQDs plus everything still expected: pending, projected, and potential entries. It is where you would finish the year if your plans happen.',
-  },
-  'summary.gap': {
-    title: 'Actual and forecast gap',
-    body: 'Actual gap: MQDs still needed beyond what has posted. Forecast gap: MQDs still needed beyond everything you have planned. A forecast gap of 0 means your plans cover the goal.',
-  },
+  'state.posted': { title: 'Posted', body: STATE_HELP.Posted },
+  'state.pending': { title: 'Pending', body: STATE_HELP.Pending },
+  'state.planned': { title: 'Planned', body: STATE_HELP.Planned },
+  'state.potential': { title: 'Potential', body: STATE_HELP.Potential },
+  'summary.forecast': { title: 'Forecast', body: FORECAST_HELP },
   'summary.pace': {
     title: 'Monthly pace',
-    body: 'The actual gap spread evenly across the months left, counting from the as-of date in Settings. Roughly how much needs to post each month to stay on track.',
-  },
-  'summary.tiers': {
-    title: 'Tier progress',
-    body: 'Earned means your posted MQDs reach the tier. Projected means your total forecast reaches it. These reflect this year’s tracked earnings, not any status you hold now.',
+    body: 'What’s left to post before your goal, spread evenly across the months left. Months count from the as-of date in Settings.',
   },
   'chart.lines': {
     title: 'Reading the chart',
     body: 'Month-end totals as a share of your goal. Solid line: posted. Dashed line: total forecast. Dotted line: an even pace from zero to your goal. Above the dotted line means you are ahead of pace.',
-  },
-  breakdown: {
-    title: 'Where earnings come from',
-    body: 'Your MQDs by source. Actual counts posted entries only. Forecast adds pending, projected, and potential entries.',
   },
   mix: {
     title: 'Earning mix',
@@ -58,23 +47,23 @@ export const TIPS = {
   },
   'flights.states': {
     title: 'Flight states',
-    body: 'Potential: an idea, not booked yet. Booked moves a flight to Projected. Credited moves its MQDs to posted once Delta credits them. Every state except Cancelled counts in the forecast.',
+    body: 'Potential: considering, not booked yet. Switch Booked on to move a flight to Planned. Switch Credited on to move it to Posted once Delta credits it. Every state except Cancelled counts in the forecast. Use Edit to enter the exact MQDs Delta posts.',
   },
   headstarts: {
     title: 'MQD Headstarts',
-    body: 'Some Delta SkyMiles American Express cards add MQDs each year just for holding the card. Mark a Headstart credited when it appears in your SkyMiles account.',
+    body: 'Some Delta SkyMiles American Express cards add MQDs each year just for holding the card. The expected date starts as a placeholder: set it, then switch Credited on when the Headstart appears in your SkyMiles account.',
   },
   'monthly-spend': {
     title: 'Monthly card spend',
-    body: 'Enter eligible spend for each month and the tracker estimates MQDs at the card’s rate. The second field takes the exact MQDs Delta posts; leave it blank to use the estimate. Edits count once you select Save changes.',
+    body: 'Enter eligible spend for each month and the tracker estimates MQDs at the card’s rate. Eligible spend leaves out returns and ineligible transactions. The second field takes the exact MQDs Delta posts; leave it blank to use the estimate. Edits count once you select Save changes.',
   },
   'travel-bonuses': {
     title: 'Stays and rental bonuses',
-    body: 'Some Delta Stays bookings and rental car offers award bonus MQDs. Add them here and mark them credited when they post.',
+    body: 'Some Delta Stays bookings and rental car offers award bonus MQDs. Add them with the qualifying activity date, and switch Credited on when they post.',
   },
   'ledger.states': {
     title: 'Activity states',
-    body: 'Potential: not booked yet. Projected: booked or expected. Pending: done, waiting for Delta to post it. Posted: credited to your account. Card excluded: from a card you’re considering but haven’t included. A ≈ next to the MQDs means the number is calculated, not entered from Delta.',
+    body: 'Potential: considering, not booked. Planned: booked or scheduled. Pending: done, waiting on Delta. Posted: in your SkyMiles account. Card excluded: from a card you’re considering but haven’t included. A ≈ next to the MQDs means the number is calculated, not entered from Delta.',
   },
   'entry.method': {
     title: 'Calculation method',
@@ -128,18 +117,20 @@ export const TOURS: Record<TourKey, Tour> = {
       },
       {
         target: 'headstarts',
+        tab: 'cards',
         title: 'Card Headstarts',
-        body: 'Each card’s Headstart shows here. Mark it credited when it posts to your SkyMiles account.',
+        body: 'Each card’s Headstart shows on the Cards tab. Switch Credited on when it posts to your SkyMiles account.',
       },
       {
         target: 'monthly-spend',
+        tab: 'cards',
         title: 'Monthly card spend',
         body: 'Plan eligible spend for each month. The tracker estimates the MQDs, and you can enter the exact credit once Delta posts it.',
       },
       {
         target: 'add-earning',
-        title: 'Flights and bonuses',
-        body: 'Use + Add earning for flights, Delta Stays and rental bonuses, or anything else that earns MQDs. Here’s what’s inside.',
+        title: 'Add anything else',
+        body: 'Use + Add for flights, card spend, Delta Stays and rental bonuses, or anything else that earns MQDs. Here’s what’s inside an earning.',
       },
       {
         target: 'entry.category',
@@ -165,7 +156,7 @@ export const TOURS: Record<TourKey, Tour> = {
       {
         target: 'entry.state',
         title: 'Earning state',
-        body: 'Projected: booked, not flown. Pending: flown, waiting on Delta. Posted: credited. On each flight card, switch Credited on when the MQDs post, and switch Booked off for a trip you haven’t booked yet (Potential). Now add your first flight.',
+        body: 'Planned: booked, not flown. Pending: flown, waiting on Delta. Posted: credited. A trip you’re only considering is Potential: pick it in Add flight, or switch Booked off on its flight card. Switch Credited on when the MQDs post. Now add your first flight.',
       },
     ],
   },
@@ -175,32 +166,37 @@ export const TOURS: Record<TourKey, Tour> = {
       {
         target: 'summary',
         title: 'Your status at a glance',
-        body: 'The big number is your posted MQDs against your goal. Below it, a bar across every tier: solid for posted, lighter for your forecast.',
-      },
-      {
-        target: 'summary.gap',
-        title: 'Gaps and pace',
-        body: 'Actual gap: still needed beyond what’s posted. Forecast gap: still needed beyond everything planned. The line underneath is the monthly pace to close the actual gap.',
+        body: 'Where your year lands with what’s booked, how far that is from your goal, and what your Potential trips would add.',
       },
       {
         target: 'summary.bar',
-        title: 'Tier markers',
-        body: 'Each marker is a Medallion tier. A filled marker is earned from posted MQDs; an outlined red one is reached by your forecast. ★ marks your goal.',
+        title: 'One bar, four states',
+        body: 'Dark is Posted, then Pending, Planned, and hatched Potential. The marks are Medallion tiers; red is your goal. A ✓ means posted MQDs already reach that tier.',
       },
       {
-        target: 'summary.tiers',
-        title: 'Tier tiles',
-        body: 'Every tier marked Earned, Projected, or Not reached, with your goal labeled.',
+        target: 'summary.states',
+        title: 'What the states mean',
+        body: 'Posted: in your SkyMiles account, and the only MQDs that count today. Pending: done, waiting on Delta. Planned: booked or scheduled. Potential: trips you’re considering. Forecast adds all four. Select any of these words on the page to see its meaning again.',
+      },
+      {
+        target: 'summary.gap',
+        title: 'What’s left',
+        body: 'How short your forecast is of your goal, and the pace that needs to post each month to get there.',
+      },
+      {
+        target: 'attention',
+        title: 'Needs attention',
+        body: 'Past flights, Headstarts, and card months that haven’t posted yet. Mark them posted here as Delta credits them.',
       },
       {
         target: 'chart',
-        title: 'Projected totals',
-        body: 'Month-end progress as a share of your goal. Solid: posted. Dashed: total forecast. Dotted: an even pace to the goal. Above the dotted line means you’re ahead.',
+        title: 'Progress over the year',
+        body: 'Month-end progress as a share of your goal. Solid: posted. Dashed: forecast. Dotted: an even pace to the goal. Above the dotted line means you’re ahead.',
       },
       {
-        target: 'breakdown',
-        title: 'Where earnings come from',
-        body: 'Posted and forecast MQDs by source, so you can see what’s carrying your year.',
+        target: 'sources',
+        title: 'Where your MQDs come from',
+        body: 'Flights, cards, and bonuses each have a tab, labeled with their forecast MQDs. Open one to see and update its entries.',
       },
     ],
   },
@@ -209,17 +205,18 @@ export const TOURS: Record<TourKey, Tour> = {
     steps: [
       {
         target: 'mix',
-        title: 'Find your earning mix',
+        title: 'Close the gap',
         body: 'Move the slider to split your remaining gap between flights and card spend, and see the fares or spend you’d need. Nothing here is saved.',
       },
       {
         target: 'flights',
+        tab: 'flights',
         title: 'Potential vs Posted',
         body: 'Potential flights count in your forecast but not in posted MQDs. To test a trip you’re considering, add it and switch Booked off on its flight card.',
       },
       {
         target: 'ledger',
-        title: 'Earning activity',
+        title: 'All earnings',
         body: 'Every entry in one list. Filter by state to see what’s still waiting to post, and edit entries to match what Delta credits.',
       },
     ],

@@ -4,7 +4,6 @@ export type ProgramCode = (typeof PROGRAMS)[number];
 export const CATEGORIES = ['Flights', 'Credit card spend', 'Qualifying bonuses'] as const;
 export type Category = (typeof CATEGORIES)[number];
 
-/** "Planned" is displayed as "Projected" in the UI, matching the original tracker. */
 export const ENTRY_STATES = ['Posted', 'Pending', 'Planned', 'Potential', 'Cancelled'] as const;
 export type EntryState = (typeof ENTRY_STATES)[number];
 
@@ -41,7 +40,7 @@ export interface Tier {
 export interface Totals {
   posted: number;
   pending: number;
-  /** Planned + Potential. */
   planned: number;
+  potential: number;
   forecast: number;
 }

@@ -56,7 +56,7 @@ export const SAMPLE = {
   summary: goalSummary(ENTRIES, 'DL', TARGET, AS_OF, YEAR),
 };
 
-/** Same words as the dashboard's flight toggles: Credited = posted, Booked = projected, Potential = not booked yet. */
+/** Same words as the dashboard's flight toggles: Credited = posted, Booked = planned, Potential = not booked yet. */
 function flightStatus(state: EntryState) {
   if (state === 'Posted') return 'Credited';
   if (state === 'Potential') return 'Potential';

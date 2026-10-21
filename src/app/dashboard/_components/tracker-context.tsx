@@ -44,6 +44,9 @@ function reducer(state: DashboardData, op: Op): DashboardData {
   }
 }
 
+/** The tabs of the Sources panel. */
+export type SourceTab = 'flights' | 'cards' | 'bonuses';
+
 export interface EntryPreset {
   category?: Entry['category'];
   method?: string;
@@ -72,6 +75,10 @@ interface TrackerContextValue {
   setTripOpen: (open: boolean) => void;
   settingsOpen: boolean;
   setSettingsOpen: (open: boolean) => void;
+  sourceTab: SourceTab;
+  setSourceTab: (tab: SourceTab) => void;
+  /** Selects a Sources tab and scrolls the panel into view. */
+  showSource: (tab: SourceTab) => void;
 }
 
 const TrackerContext = createContext<TrackerContextValue | null>(null);
@@ -90,6 +97,7 @@ export function TrackerProvider({ initial, children }: { initial: DashboardData;
   const [entryDialog, setEntryDialog] = useState<TrackerContextValue['entryDialog']>({ open: false });
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [tripOpen, setTripOpen] = useState(false);
+  const [sourceTab, setSourceTab] = useState<SourceTab>('flights');
 
   const toast = useCallback((message: string) => {
     setToastMessage(message);
@@ -131,8 +139,14 @@ export function TrackerProvider({ initial, children }: { initial: DashboardData;
       setTripOpen,
       settingsOpen,
       setSettingsOpen,
+      sourceTab,
+      setSourceTab,
+      showSource: (tab) => {
+        setSourceTab(tab);
+        requestAnimationFrame(() => document.getElementById('sources')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      },
     };
-  }, [data, pending, run, toast, entryDialog, tripOpen, settingsOpen]);
+  }, [data, pending, run, toast, entryDialog, tripOpen, settingsOpen, sourceTab]);
 
   return (
     <TrackerContext value={value}>

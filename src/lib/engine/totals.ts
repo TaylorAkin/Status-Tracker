@@ -1,4 +1,5 @@
-import type { Category, Entry, ProgramCode, Totals } from './types';
+import { tierProgress } from './tiers';
+import type { Category, Entry, ProgramCode, Tier, Totals } from './types';
 
 export function credit(e: Pick<Entry, 'override' | 'amount' | 'rate'>): number {
   return e.override !== null ? e.override : e.amount * e.rate;
@@ -11,8 +12,9 @@ export function totals(entries: Entry[], program: ProgramCode, category?: Catego
   const rows = entries.filter((e) => e.program === program && (!category || e.category === category) && e.state !== 'Cancelled');
   const posted = sumCredit(rows.filter((e) => e.state === 'Posted'));
   const pending = sumCredit(rows.filter((e) => e.state === 'Pending'));
-  const planned = sumCredit(rows.filter((e) => e.state === 'Planned' || e.state === 'Potential'));
-  return { posted, pending, planned, forecast: posted + pending + planned };
+  const planned = sumCredit(rows.filter((e) => e.state === 'Planned'));
+  const potential = sumCredit(rows.filter((e) => e.state === 'Potential'));
+  return { posted, pending, planned, potential, forecast: posted + pending + planned + potential };
 }
 
 /** Months remaining in the status year as of `asOf` (the current month counts as remaining). */
@@ -51,4 +53,23 @@ export function goalSummary(entries: Entry[], program: ProgramCode, target: numb
     postedPercent: (t.posted / target) * 100,
     forecastPercent: (t.forecast / target) * 100,
   };
+}
+
+/**
+ * Where the year lands, keeping what's committed (posted, pending, planned) apart from Potential trips.
+ * `short` is the gap left by committed MQDs; `tier` is the highest tier they reach.
+ */
+export type GoalOutlook =
+  | { kind: 'empty' }
+  | { kind: 'reached' }
+  | { kind: 'planned'; toPost: number }
+  | { kind: 'short'; tier: Tier | undefined; short: number; potential: number };
+
+/** `tiers` must be sorted by ascending threshold. */
+export function goalOutlook(t: Totals, target: number, tiers: Tier[]): GoalOutlook {
+  if (t.forecast === 0) return { kind: 'empty' };
+  if (t.posted >= target) return { kind: 'reached' };
+  const committed = t.posted + t.pending + t.planned;
+  if (committed >= target) return { kind: 'planned', toPost: target - t.posted };
+  return { kind: 'short', tier: tierProgress(tiers, t.posted, committed).forecast, short: target - committed, potential: t.potential };
 }

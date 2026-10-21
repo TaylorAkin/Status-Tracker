@@ -1,4 +1,4 @@
-import { routeMiles, SEPARATORS, type Airports, type RouteLeg } from './routes';
+import { flightRouteCodes, routeMiles, SEPARATORS, type Airports, type RouteLeg } from './routes';
 import type { Entry } from './types';
 
 /** One ticket of a trip: outbound or return, with its own route, date, and fare. */
@@ -71,4 +71,17 @@ export function groupTrips(entries: Entry[]): FlightGroup[] {
   for (const g of byTrip.values())
     g.legs.sort((a, b) => (a.ticket ?? 0) - (b.ticket ?? 0) || (a.leg ?? 0) - (b.leg ?? 0) || a.date.localeCompare(b.date));
   return groups;
+}
+
+/** "DCA → ATL → LAX → DCA", breaking with " · " where one leg doesn't start where the last one landed. */
+export function tripPath(legs: Entry[]): string {
+  const parts: string[][] = [];
+  for (const e of legs) {
+    const codes = flightRouteCodes(e);
+    if (codes.length < 2) continue;
+    const last = parts.at(-1);
+    if (last && last.at(-1) === codes[0]) last.push(...codes.slice(1));
+    else parts.push([...codes]);
+  }
+  return parts.map((p) => p.join(' → ')).join(' · ');
 }

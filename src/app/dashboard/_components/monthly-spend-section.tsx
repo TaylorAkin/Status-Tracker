@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { credit, type Entry } from '@/lib/engine';
 import { MONTH_NAMES, MONTH_SHORT, precise } from '@/lib/format';
 import type { CardInfo, TrackerCardInfo } from '@/lib/tracker/types';
-import { buttonClass, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
+import { buttonClass, EmptyState, Hint, Panel, PanelHead, StatePill, Switch } from '@/components/ui';
 import * as actions from '../actions';
 import { InfoTip } from './help/info-tip';
 import { useTracker } from './tracker-context';
@@ -21,15 +21,17 @@ export function MonthlySpendSection() {
       <PanelHead
         title={
           <>
-            Monthly credit-card earnings
+            Monthly card spend
             <InfoTip id="monthly-spend" />
           </>
         }
-        sub="Plan all twelve months for each card. Save edits together and mark each month credited when its MQDs post."
+        sub={
+          <>
+            Posted <strong className="text-brand">{precise(actual)}</strong> · Forecast <strong className="text-brand">{precise(forecast)}</strong>{' '}
+            {unit}. Plan each month, save, and switch Credited on when it posts.
+          </>
+        }
       />
-      <p className="mb-5 rounded-lg border border-line px-4 py-3 text-xs text-muted">
-        {data.tracker.statusYear} saved card earnings: {precise(actual)} actual / {precise(forecast)} total forecast {unit}.
-      </p>
       {cards.length ? (
         <div className="grid gap-4 md:grid-cols-2">
           {cards.map(({ tc, card }) => (
@@ -37,14 +39,8 @@ export function MonthlySpendSection() {
           ))}
         </div>
       ) : (
-        <p className="rounded-lg border border-dashed border-line p-6 text-center text-sm text-muted">
-          Choose your Delta cards in Settings to plan monthly spend.
-        </p>
+        <EmptyState>Choose your Delta cards in Settings to plan monthly spend.</EmptyState>
       )}
-      <Hint>
-        Monthly entries feed the activity log, progress card, tiers, and chart. Eligible spend excludes returns and ineligible transactions. Enter the
-        exact airline-posted credit to reconcile rounding.
-      </Hint>
     </Panel>
   );
 }
@@ -108,7 +104,7 @@ function SpendCard({ card, tc }: { card: CardInfo; tc: TrackerCardInfo }) {
         e.preventDefault();
         save(Object.keys(drafts).map(Number));
       }}
-      className={`rounded-xl border border-[#e6c4cb] border-t-[3px] p-5 ${disabled ? 'bg-[#f6f7f6]' : 'bg-[linear-gradient(135deg,#fff_12%,#f4f3f2_62%,#edf1f7)]'}`}
+      className={`rounded-xl border border-line border-t-[3px] border-t-[#e6c4cb] p-5 ${disabled ? 'bg-[#f6f7f6]' : 'bg-[linear-gradient(135deg,#fff_12%,#f4f3f2_62%,#edf1f7)]'}`}
     >
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-[13px] font-semibold leading-snug text-brand">{card.name}</h3>
@@ -174,7 +170,7 @@ function SpendCard({ card, tc }: { card: CardInfo; tc: TrackerCardInfo }) {
       </div>
       <div className="mb-2 mt-3 flex flex-wrap justify-between gap-3 text-[11px] text-muted">
         <span>
-          Actual <strong className="tabular-nums text-brand">{precise(actual)}</strong>
+          Posted <strong className="tabular-nums text-brand">{precise(actual)}</strong>
         </span>
         <span>
           Forecast <strong className="tabular-nums text-brand">{precise(forecast)}</strong> {unit}
